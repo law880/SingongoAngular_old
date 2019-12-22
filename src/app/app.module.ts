@@ -13,6 +13,8 @@ import {AuthGuardService} from './auth/auth-guard.service';
 import {AuthService} from './auth/auth.service';
 import { LogoutComponent } from './auth/logout/logout.component';
 import { NavigationComponent } from './navigation/navigation.component';
+import { ProfileViewComponent } from './auth/profile-view/profile-view.component';
+import {UserInfoService} from './auth/user-info.service';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import { NavigationComponent } from './navigation/navigation.component';
     HomeComponent,
     LogoutComponent,
     NavigationComponent,
+    ProfileViewComponent,
   ],
   imports: [
     RouterModule.forRoot(
@@ -32,7 +35,7 @@ import { NavigationComponent } from './navigation/navigation.component';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [AuthGuardService, AuthService],
+  providers: [AuthGuardService, AuthService, UserInfoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

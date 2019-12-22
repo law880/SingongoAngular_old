@@ -4,6 +4,7 @@ import {FormBuilder, Validators} from '@angular/forms';
 import {Token} from '../token';
 import {Router} from '@angular/router';
 import {AuthService} from '../auth.service';
+import {UserInfoService} from '../user-info.service';
 
 @Component({
   selector: 'app-login-form',
@@ -20,7 +21,8 @@ export class LoginFormComponent {
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
-              private router: Router
+              private router: Router,
+              private userInfoService: UserInfoService
   ) { }
 
   onSubmit() {
@@ -29,6 +31,8 @@ export class LoginFormComponent {
     this.authService.login(loginInfo)
        .subscribe(token => {
          localStorage.setItem('token', token.token);
+         this.userInfoService.setCredentials(loginInfo.username, loginInfo.password);
+         console.log('username in login ' + this.userInfoService.user.userUsername);
          this.router.navigate(['home']);
        });
   }

@@ -1,0 +1,16 @@
+<p>profile-view works!</p>
+<div *ngIf="!this.loading; else showload">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 text-right">Username:</div>
+      <div class="col-md-6 text-left">{{this.user.userUsername}}</div>
+    </div>
+  </div>
+
+  {{this.user.userAuthLevel}}
+  {{this.user.userName}}
+</div>
+<ng-template #showload>
+  <div>Loading...</div>
+</ng-template>
+

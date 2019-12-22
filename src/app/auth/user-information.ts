@@ -2,14 +2,13 @@ export class UserInformation {
   public static ADMIN_ROLE = true;
   public static USER_ROLE = false;
 
-  constructor(
-    private id: string,
-    private username: string,
-    private password: string,
-    private name: string,
-    private authLevel: boolean,
-  ) {
-  }
+  constructor() { }
+
+  private id: string;
+  private username: string;
+  private password: string;
+  private name: string;
+  private authLevel: boolean;
 
   get userId() {
     return this.id;

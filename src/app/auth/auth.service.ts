@@ -32,7 +32,7 @@ export class AuthService {
     );
   }
 
-  private handleError<T>(operation= 'operation', result?: T) {
+  public handleError<T>(operation= 'operation', result?: T) {
     return (error: any): Observable<T> => {
       if (error.message.includes('400')) {
         this.log('Invalid username or password. Please try again.');

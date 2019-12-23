@@ -14,6 +14,8 @@ export class ProfileViewComponent implements OnInit {
   }
   private user: UserInformation = new UserInformation();
   public loading: boolean;
+  public authLevel: string;
+
   ngOnInit(): void {
     this.loading = true;
     this.fetchUser();
@@ -26,8 +28,10 @@ export class ProfileViewComponent implements OnInit {
       this.user.setName(result.name);
       if (result.authLevel === UserInformation.ADMIN_ROLE) {
         this.user.setAuthLevel(false);
+        this.authLevel = 'Administrator';
       } else {
         this.user.setAuthLevel(true);
+        this.authLevel = 'Singer';
       }
       this.loading = false;
     } );

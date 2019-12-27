@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Login} from '../login';
+import {Login} from '../models/login';
 import {FormBuilder, Validators} from '@angular/forms';
-import {Token} from '../token';
+import {Token} from '../models/token';
 import {Router} from '@angular/router';
-import {AuthService} from '../auth.service';
-import {UserInfoService} from '../user-info.service';
+import {AuthService} from '../services/auth.service';
+import {UserInfoService} from '../services/user-info.service';
 
 @Component({
   selector: 'app-login-form',
@@ -31,6 +31,7 @@ export class LoginFormComponent {
     this.authService.login(loginInfo)
        .subscribe(token => {
          localStorage.setItem('token', token.token);
+         localStorage.setItem('refreshToken', token.refreshToken);
          this.userInfoService.setCredentials(loginInfo.username, loginInfo.password);
          console.log('username in login ' + this.userInfoService.user.userUsername);
          this.router.navigate(['home']);

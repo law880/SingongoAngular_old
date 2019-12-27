@@ -4,18 +4,19 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { LoginFormComponent } from './auth/login-form/login-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { LoginMessageComponent } from './auth/login-form/login-message/login-message.component';
 import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
 import { ROUTES} from './app.routes';
-import { AuthGuardService } from './auth/auth-guard.service';
-import { AuthService } from './auth/auth.service';
-import { LogoutComponent } from './auth/logout/logout.component';
+import { AuthGuardService } from './auth/services/auth-guard.service';
+import { AuthService } from './auth/services/auth.service';
+import { LogoutComponent } from './auth/components/logout/logout.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { ProfileViewComponent } from './auth/profile-view/profile-view.component';
-import {UserInfoService } from './auth/user-info.service';
-import { ChangePasswordViewComponent } from './auth/profile-view/change-password-view/change-password-view.component';
+import { ProfileViewComponent } from './home/profile-view/profile-view.component';
+import {UserInfoService } from './auth/services/user-info.service';
+import {JwtInterceptor} from './auth/services/jwt-interceptor';
+import { PasswordChangeComponent } from './home/profile-view/password-change/password-change.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { ChangePasswordViewComponent } from './auth/profile-view/change-password
     LogoutComponent,
     NavigationComponent,
     ProfileViewComponent,
-    ChangePasswordViewComponent,
+    PasswordChangeComponent,
   ],
   imports: [
     RouterModule.forRoot(
@@ -37,7 +38,15 @@ import { ChangePasswordViewComponent } from './auth/profile-view/change-password
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [AuthGuardService, AuthService, UserInfoService],
+  providers: [
+    AuthGuardService,
+    AuthService,
+    UserInfoService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

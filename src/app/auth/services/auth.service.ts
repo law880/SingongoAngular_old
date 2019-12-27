@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Login} from './login';
+import {Login} from '../models/login';
 import {Observable, of} from 'rxjs';
-import {Token} from './token';
-import {catchError} from 'rxjs/operators';
+import {Token} from '../models/token';
+import {catchError, tap} from 'rxjs/operators';
 import {MessageService} from './message.service';
 
 const jwtHelperService = new JwtHelperService();
@@ -34,7 +34,7 @@ export class AuthService {
 
   public handleError<T>(operation= 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      if (error.message.includes('400')) {
+      if (error.message.includes('40')) {
         this.log('Invalid username or password. Please try again.');
       } else {
         this.log('An unexpected error occurred. Please try again later.');
@@ -50,5 +50,15 @@ export class AuthService {
 
   public logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+  }
+
+  public refreshToken() {
+    return this.http.post<any>('http://localhost:8080/refresh', {
+      refreshToken: localStorage.getItem('refreshToken')
+    }).pipe(tap((token: Token) => {
+      localStorage.setItem('token', token.token);
+      localStorage.setItem('refreshToken', token.refreshToken);
+    }));
   }
 }

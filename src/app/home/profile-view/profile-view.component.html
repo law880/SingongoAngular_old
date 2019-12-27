@@ -1,0 +1,30 @@
+<div *ngIf="!this.loading; else showLoad" class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-4 text-right">Username:</div>
+    <div class="col-sm-4 text-left">{{this.user.userUsername}}</div>
+    <div class="col-sm-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-4 text-right">Name:</div>
+    <div class="col-sm-4 text-left">{{this.user.userName}}</div>
+    <div class="col-sm-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-4 text-right">User Type:</div>
+    <div class="col-sm-4 text-left">{{this.authLevel}}</div>
+    <div class="col-sm-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4 text-center"><button type="button" class="btn-primary" data-toggle="modal" data-target="#passwordChangeModal">Change Password</button></div>
+    <div class="col-sm-4"></div>
+  </div>
+  <app-password-change></app-password-change>
+</div>
+<ng-template #showLoad>
+  <div>Loading...</div>
+</ng-template>
+

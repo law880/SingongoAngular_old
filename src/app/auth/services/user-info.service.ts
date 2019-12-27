@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {UserInformation} from './user-information';
+import {UserInformation} from '../models/user-information';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from './auth.service';
@@ -14,10 +14,6 @@ export class UserInfoService {
   constructor(private http: HttpClient,
               private authService: AuthService) { }
 
-  httpOptions = {
-    headers: new HttpHeaders({'Content-Type': 'application/json', Authorization: 'Bearer ' + localStorage.getItem('token')})
-  };
-
   setCredentials(username: string, password: string) {
     console.log('in setting ');
     this.user.setUsername(username);
@@ -30,7 +26,7 @@ export class UserInfoService {
     if (!token) {
       return;
     }
-    return this.http.get<any>('http://localhost:8080/current', this.httpOptions);
+    return this.http.get<any>('http://localhost:8080/current');
   }
 
   update(updatedUser: UserInformation) {
@@ -75,6 +71,16 @@ export class UserInfoService {
     } else {
       return of(null);
     }
+  }
+
+  changePassword(currPassword: string, newPassword: string, newPassConfirm: string) {
+    if (currPassword !== this.user.userPassword) {
+      return of(null);
+    }
+    return this.http.patch('http://localhost:8080/user/' + this.user.userUsername, {
+      password: newPassword,
+      passwordConfirm: newPassConfirm
+    });
   }
 
   get correctPassword() { return this.user.userPassword; }

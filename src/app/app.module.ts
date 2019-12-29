@@ -17,6 +17,7 @@ import { ProfileViewComponent } from './home/profile-view/profile-view.component
 import {UserInfoService } from './auth/services/user-info.service';
 import {JwtInterceptor} from './auth/services/jwt-interceptor';
 import { PasswordChangeComponent } from './home/profile-view/password-change/password-change.component';
+import { FolderViewComponent } from './home/components/folder-view/folder-view.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { PasswordChangeComponent } from './home/profile-view/password-change/pas
     NavigationComponent,
     ProfileViewComponent,
     PasswordChangeComponent,
+    FolderViewComponent,
   ],
   imports: [
     RouterModule.forRoot(

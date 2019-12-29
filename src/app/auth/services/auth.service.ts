@@ -6,6 +6,7 @@ import {Observable, of} from 'rxjs';
 import {Token} from '../models/token';
 import {catchError, tap} from 'rxjs/operators';
 import {MessageService} from './message.service';
+import {baseUrl} from '../../constants';
 
 const jwtHelperService = new JwtHelperService();
 
@@ -14,7 +15,7 @@ export class AuthService {
 
   constructor(public messageService: MessageService,
               private http: HttpClient) { }
-  loginUrl = 'http://localhost:8080/authenticate';
+  loginUrl = baseUrl + 'authenticate';
 
   httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -54,7 +55,7 @@ export class AuthService {
   }
 
   public refreshToken() {
-    return this.http.post<any>('http://localhost:8080/refresh', {
+    return this.http.post<any>(baseUrl + 'refresh', {
       refreshToken: localStorage.getItem('refreshToken')
     }).pipe(tap((token: Token) => {
       localStorage.setItem('token', token.token);

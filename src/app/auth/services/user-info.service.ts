@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from './auth.service';
 import {Observable, of} from 'rxjs';
+import {baseUrl} from "../../constants";
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class UserInfoService {
     if (!token) {
       return;
     }
-    return this.http.get<any>('http://localhost:8080/current');
+    return this.http.get<any>(baseUrl + 'current');
   }
 
   update(updatedUser: UserInformation) {
@@ -77,7 +78,7 @@ export class UserInfoService {
     if (currPassword !== this.user.userPassword) {
       return of(null);
     }
-    return this.http.patch('http://localhost:8080/user/' + this.user.userUsername, {
+    return this.http.patch(baseUrl + 'user/' + this.user.userUsername, {
       password: newPassword,
       passwordConfirm: newPassConfirm
     });

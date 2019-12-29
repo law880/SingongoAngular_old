@@ -1,0 +1,8 @@
+<p>folder-view works!</p>
+<div *ngIf="!this.loading else showLoad">
+  <h1>{{folderName}}</h1>
+  <ul>
+    <li *ngFor="let name of contents">{{name}}</li>
+  </ul>
+</div>
+<ng-template #showLoad><p>Loading...</p></ng-template>

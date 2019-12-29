@@ -18,6 +18,8 @@ export class PasswordChangeComponent {
     newPassConfirm: ['', Validators.required]
   });
 
+  passwordsEqual = true;
+
   constructor(private fb: FormBuilder,
               private userInfoService: UserInfoService,
               private router: Router
@@ -25,7 +27,11 @@ export class PasswordChangeComponent {
 
   onSubmit() {
     console.log(this.passwordChangeForm.value);
-    this.userInfoService.changePassword(this.currPass.value, this.newPass.value, this.newPassConfirm.value);
+    if (this.newPass.value !== this.newPassConfirm.value) {
+      this.passwordsEqual = false;
+    } else {
+      this.userInfoService.changePassword(this.currPass.value, this.newPass.value, this.newPassConfirm.value);
+    }
   }
 
   get currPass() { return this.passwordChangeForm.get('currPass'); }

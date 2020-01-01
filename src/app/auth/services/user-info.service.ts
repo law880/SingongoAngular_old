@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import {UserInformation} from '../models/user-information';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from './auth.service';
-import {Observable, of} from 'rxjs';
-import {baseUrl} from "../../constants";
+import {Observable, of, throwError} from 'rxjs';
+import {baseUrl} from '../../constants';
+import {Router} from '@angular/router';
+import {MessageService} from './message.service';
+import {PASSWORD_CHANGE_COMPONENT} from '../../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +16,9 @@ export class UserInfoService {
   public user: UserInformation = new UserInformation();
 
   constructor(private http: HttpClient,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private messageService: MessageService
+  ) { }
 
   setCredentials(username: string, password: string) {
     console.log('in setting ');
@@ -75,13 +80,20 @@ export class UserInfoService {
   }
 
   changePassword(currPassword: string, newPassword: string, newPassConfirm: string) {
+    this.messageService.delete(PASSWORD_CHANGE_COMPONENT);
     if (currPassword !== this.user.userPassword) {
       return of(null);
     }
+    this.user.setPassword(newPassword);
     return this.http.patch(baseUrl + 'user/' + this.user.userUsername, {
       password: newPassword,
       passwordConfirm: newPassConfirm
-    });
+    }).pipe(
+      catchError((err: HttpErrorResponse) => {
+        this.messageService.add('An error occurred. Please try again later.', PASSWORD_CHANGE_COMPONENT);
+        return throwError(err);
+      })
+    );
   }
 
   get correctPassword() { return this.user.userPassword; }

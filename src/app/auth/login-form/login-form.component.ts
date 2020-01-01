@@ -5,6 +5,7 @@ import {Token} from '../models/token';
 import {Router} from '@angular/router';
 import {AuthService} from '../services/auth.service';
 import {UserInfoService} from '../services/user-info.service';
+import {LOGIN_FORM_COMPONENT} from '../../constants';
 
 @Component({
   selector: 'app-login-form',
@@ -41,4 +42,6 @@ export class LoginFormComponent {
   get username() { return this.loginForm.get('username'); }
 
   get password() { return this.loginForm.get('password'); }
+
+  get compName() { return LOGIN_FORM_COMPONENT; }
 }

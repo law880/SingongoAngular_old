@@ -4,13 +4,24 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MessageService {
-  message: string;
-
-  add(message: string) {
-    this.message = message;
+  messages: Map<string, string> = new Map<string, string>(); // component to message
+  add(message: string, component: string) {
+    if (!this.messages.has(component)) {
+      this.messages.set(component, message);
+    } else {
+      return 'Component already contains a message';
+    }
   }
 
-  clear() {
-    this.message = '';
+  delete(component: string) {
+    this.messages.delete(component);
+  }
+
+  getMessage(component: string): string {
+    return this.messages.get(component);
+  }
+
+  hasMessage(component: string): boolean {
+    return this.messages.has(component);
   }
 }

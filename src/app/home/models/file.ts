@@ -1,12 +1,12 @@
 export class File {
   constructor(
-    private id: string,
-    private name: string,
-    private size: bigint,
-    private dateCreated: Date,
-    private dateModified: Date,
-    private type: string,
-    private extension: string
+    public id: string,
+    public name: string,
+    public size: bigint,
+    public dateCreated: Date,
+    public dateModified: Date,
+    public type: string,
+    public extension: string
   ) { }
 
   get fileId() { return this.id; }
@@ -22,4 +22,13 @@ export class File {
   get fileType() { return this.type; }
 
   get fileExtension() { return this.extension; }
+
+  public static compare(fOne: File, fTwo: File) {
+    if (fOne.fileName < fTwo.fileName) {
+      return -1;
+    } else if (fOne.fileName > fTwo.fileName) {
+      return 1;
+    }
+    return 0;
+  }
 }

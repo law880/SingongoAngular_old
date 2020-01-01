@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { LoginFormComponent } from './auth/login-form/login-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { LoginMessageComponent } from './auth/login-form/login-message/login-message.component';
 import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
 import { ROUTES} from './app.routes';
@@ -18,18 +17,20 @@ import {UserInfoService } from './auth/services/user-info.service';
 import {JwtInterceptor} from './auth/services/jwt-interceptor';
 import { PasswordChangeComponent } from './home/profile-view/password-change/password-change.component';
 import { FolderViewComponent } from './home/components/folder-view/folder-view.component';
+import { MessageComponent } from './message/message.component';
+import {ContentService} from './home/services/content.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginFormComponent,
-    LoginMessageComponent,
     HomeComponent,
     LogoutComponent,
     NavigationComponent,
     ProfileViewComponent,
     PasswordChangeComponent,
     FolderViewComponent,
+    MessageComponent
   ],
   imports: [
     RouterModule.forRoot(
@@ -44,6 +45,7 @@ import { FolderViewComponent } from './home/components/folder-view/folder-view.c
     AuthGuardService,
     AuthService,
     UserInfoService,
+    ContentService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,

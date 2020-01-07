@@ -5,6 +5,9 @@ import {File} from '../../models/file';
 import {FolderContents} from '../../models/folder-contents';
 import {FOLDER_VIEW_COMPONENT} from '../../../constants';
 import {FormBuilder} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {FolderCreateComponent} from './folder-create/folder-create.component';
+import {FileUploadComponent} from "./file-upload/file-upload.component";
 
 @Component({
   selector: 'app-folder-view',
@@ -18,15 +21,14 @@ export class FolderViewComponent implements OnInit {
 
   public loading = false;
 
-  public creating = false;
-
   private currentFolder: Folder;
 
   private contents: FolderContents;
 
   constructor(
     private contentService: ContentService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit() {
@@ -47,7 +49,6 @@ export class FolderViewComponent implements OnInit {
               );
             });
         } else {
-          console.log('else');
           this.contentService.fetchFolder()
             .subscribe(data => {
               this.currentFolder = new Folder(data.id, data.name, data.contents, data.parentId, data.dateCreated, data.dateModified);
@@ -64,18 +65,50 @@ export class FolderViewComponent implements OnInit {
       });
   }
 
-  createSubmit() {
-    this.creating = true;
-    this.contentService.createFolder(this.currentFolder.folderId, this.folderName.value)
-      .subscribe(data => {
-        this.contentService.fetchFolderContents(this.currentFolder.folderId).subscribe(
-          folData => {
-            alert('Folder created successfully');
-            this.creationForm.setValue({folderName: ''});
-            this.contents = folData;
-            this.creating = false;
-          }
-        );
+  uploadFile() {
+    const fileModalRef = this.modalService.open(FileUploadComponent);
+    fileModalRef.componentInstance.folderId = this.currentFolder.folderId;
+    fileModalRef.result.then((result) => {
+      if (result === true) {
+        this.contentService.fetchFolder(this.currentFolder.folderId)
+          .subscribe(data => {
+            this.currentFolder = new Folder(data.id, data.name, data.contents, data.parentId, data.dateCreated, data.dateModified);
+            console.log(this.currentFolder);
+            this.contentService.fetchFolderContents(this.currentFolder.folderId).subscribe(
+              folData => {
+                this.contents = folData;
+                this.loading = false;
+                console.log(this.contents);
+              }
+            );
+          });
+      }
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
+  openCreateFolModal() {
+    const folModalRef = this.modalService.open(FolderCreateComponent);
+    folModalRef.componentInstance.folderId = this.currentFolder.folderId;
+    folModalRef.result.then((result) => {
+      if (result === true) {
+        this.contentService.fetchFolder(this.currentFolder.folderId)
+          .subscribe(data => {
+            this.currentFolder = new Folder(data.id, data.name, data.contents, data.parentId, data.dateCreated, data.dateModified);
+            console.log(this.currentFolder);
+            this.contentService.fetchFolderContents(this.currentFolder.folderId).subscribe(
+              folData => {
+                this.contents = folData;
+                this.loading = false;
+                console.log(this.contents);
+              }
+            );
+          });
+      }
+    })
+      .catch((error) => {
+        console.log(error);
       });
   }
 

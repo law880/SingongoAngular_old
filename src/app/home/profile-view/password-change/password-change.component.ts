@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {Token} from '../../../auth/models/token';
 import {AuthService} from '../../../auth/services/auth.service';
@@ -7,6 +7,7 @@ import {UserInfoService} from '../../../auth/services/user-info.service';
 import {Login} from '../../../auth/models/login';
 import {MessageService} from '../../../auth/services/message.service';
 import {PASSWORD_CHANGE_COMPONENT} from '../../../constants';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -15,11 +16,13 @@ import {PASSWORD_CHANGE_COMPONENT} from '../../../constants';
   styleUrls: ['./password-change.component.css']
 })
 export class PasswordChangeComponent {
+  @Output() passPassword: EventEmitter<any> = new EventEmitter();
 
   constructor(private fb: FormBuilder,
               private userInfoService: UserInfoService,
               private router: Router,
-              private messageService: MessageService
+              private messageService: MessageService,
+              public activeModal: NgbActiveModal
   ) { }
 
   get currPass() { return this.passwordChangeForm.get('currPass'); }
@@ -49,12 +52,14 @@ export class PasswordChangeComponent {
     } else {
       this.userInfoService.changePassword(this.currPass.value, this.newPass.value, this.newPassConfirm.value)
         .subscribe(() => {
-          this.passwordChangeForm.setValue({currPass: ''});
-          this.passwordChangeForm.setValue({newPass: ''});
-          this.passwordChangeForm.setValue({newPassConfirm: ''});
           this.loading = false;
           alert('Password changed successfully.');
+          this.passBack();
         });
     }
+  }
+
+  passBack() {
+    this.activeModal.close(this.passwordChangeForm.get('newPass').value);
   }
 }

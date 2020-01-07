@@ -19,7 +19,12 @@ import { PasswordChangeComponent } from './home/profile-view/password-change/pas
 import { FolderViewComponent } from './home/components/folder-view/folder-view.component';
 import { MessageComponent } from './message/message.component';
 import {ContentService} from './home/services/content.service';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { FolderCreateComponent } from './home/components/folder-view/folder-create/folder-create.component';
+import {FileSelectDirective} from "ng2-file-upload";
+import { FileUploadComponent } from './home/components/folder-view/file-upload/file-upload.component';
 
+// noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,9 +35,13 @@ import {ContentService} from './home/services/content.service';
     ProfileViewComponent,
     PasswordChangeComponent,
     FolderViewComponent,
-    MessageComponent
+    MessageComponent,
+    FolderCreateComponent,
+    FileSelectDirective,
+    FileUploadComponent
   ],
   imports: [
+    NgbModule,
     RouterModule.forRoot(
       ROUTES,
       {enableTracing: true}
@@ -51,6 +60,7 @@ import {ContentService} from './home/services/content.service';
       useClass: JwtInterceptor,
       multi: true
     }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [FolderCreateComponent, FileUploadComponent]
 })
 export class AppModule { }

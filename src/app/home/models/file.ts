@@ -23,6 +23,8 @@ export class File {
 
   get fileExtension() { return this.extension; }
 
+  get icon() { return 'assets/img/' + this.type + '.png'; }
+
   public static compare(fOne: File, fTwo: File) {
     if (fOne.fileName < fTwo.fileName) {
       return -1;

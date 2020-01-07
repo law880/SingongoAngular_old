@@ -15,6 +15,10 @@ import {PASSWORD_CHANGE_COMPONENT} from '../../constants';
 export class UserInfoService {
   public user: UserInformation = new UserInformation();
 
+  httpOptions = {
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
+  };
+
   constructor(private http: HttpClient,
               private authService: AuthService,
               private messageService: MessageService
@@ -32,7 +36,7 @@ export class UserInfoService {
     if (!token) {
       return;
     }
-    return this.http.get<any>(baseUrl + 'current');
+    return this.http.get<any>(baseUrl + 'current', this.httpOptions);
   }
 
   update(updatedUser: UserInformation) {
@@ -73,7 +77,7 @@ export class UserInfoService {
       updated = true;
     }
     if (updated === true) {
-      return this.http.patch('http://localhost:8080/user/' + this.user.userUsername, body);
+      return this.http.patch('http://localhost:8080/user/' + this.user.userUsername, body, this.httpOptions);
     } else {
       return of(null);
     }
@@ -88,7 +92,7 @@ export class UserInfoService {
     return this.http.patch(baseUrl + 'user/' + this.user.userUsername, {
       password: newPassword,
       passwordConfirm: newPassConfirm
-    }).pipe(
+    }, this.httpOptions).pipe(
       catchError((err: HttpErrorResponse) => {
         this.messageService.add('An error occurred. Please try again later.', PASSWORD_CHANGE_COMPONENT);
         return throwError(err);

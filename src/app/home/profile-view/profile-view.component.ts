@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {UserInfoService} from '../../auth/services/user-info.service';
 import {UserInformation} from '../../auth/models/user-information';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {PasswordChangeComponent} from './password-change/password-change.component';
 
 @Component({
   selector: 'app-profile-view',
@@ -10,6 +12,7 @@ import {UserInformation} from '../../auth/models/user-information';
 export class ProfileViewComponent implements OnInit {
 
   constructor(private userInfoService: UserInfoService,
+              private modalService: NgbModal
               ) {
   }
   private user: UserInformation = new UserInformation();
@@ -35,5 +38,15 @@ export class ProfileViewComponent implements OnInit {
       }
       this.loading = false;
     } );
+  }
+
+  openPasswordChange() {
+    const modalRef = this.modalService.open(PasswordChangeComponent);
+    modalRef.componentInstance.passPassword.subscribe();
+    modalRef.result.then((newPassword: string) => {
+      if (newPassword) {
+        this.userInfoService.setCredentials(this.user.userUsername, newPassword)
+      }
+    });
   }
 }

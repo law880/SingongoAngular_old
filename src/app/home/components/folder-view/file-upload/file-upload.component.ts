@@ -14,44 +14,33 @@ import {FILE_UPLOAD_COMPONENT} from '../../../../constants';
 export class FileUploadComponent {
   @Input() public folderId: string;
 
-  uploadForm = this.fb.group({
-    file: [null, Validators.required]
-  });
+  fileToUpload: File = null;
 
   public loading = false;
 
   constructor(
     private contentService: ContentService,
-    private fb: FormBuilder,
     private activeModal: NgbActiveModal,
-    private cd: ChangeDetectorRef
   ) { }
 
   onFileSelect(event) {
-    const reader = new FileReader();
-
-    if (event.target.files && event.target.files.length) {
-      const [file] = event.target.files;
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.uploadForm.patchValue({file: reader.result});
-      };
-      this.cd.markForCheck();
+    if (event.target.files && event.target.files.length > 0) {
+      this.fileToUpload = event.target.files[0];
     }
   }
 
 
   onSubmit() {
     this.loading = true;
-    this.contentService.uploadFile(this.uploadForm.get('file').value, this.folderId)
+    this.contentService.uploadFile(this.fileToUpload, this.folderId)
       .subscribe(data => {
-        alert('Folder created successfully');
+        alert('File uploaded successfully');
         this.loading = false;
         this.activeModal.close(true);
       });
   }
 
-  get file() { return this.uploadForm.get('file'); }
+  get file() { return this.fileToUpload; }
 
   get compName() { return FILE_UPLOAD_COMPONENT; }
 

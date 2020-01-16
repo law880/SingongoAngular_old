@@ -4,6 +4,7 @@ import {AuthGuardService} from './auth/services/auth-guard.service';
 import {HomeComponent} from './home/home.component';
 import {LogoutComponent} from './auth/components/logout/logout.component';
 import {ProfileViewComponent} from './home/profile-view/profile-view.component';
+import {FolderViewComponent} from './home/components/folder-view/folder-view.component';
 
 export const ROUTES: Routes = [
   {
@@ -15,6 +16,16 @@ export const ROUTES: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuardService]
   },
+  {
+    path: 'folder/:id',
+    component: FolderViewComponent,
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'file/:id',
+    component: FolderViewComponent,
+    canActivate: [AuthGuardService]
+  },z
   {
     path: 'logout',
     component: LogoutComponent

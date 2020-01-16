@@ -23,7 +23,21 @@ export class File {
 
   get fileExtension() { return this.extension; }
 
-  get icon() { return 'assets/img/' + this.type + '.png'; }
+  get icon() {
+    let iconName;
+    if (this.type.includes('jpg') || this.type.includes('png') || this.type.includes('bmp')) {
+      iconName = 'image';
+    } else if (this.type.includes('pdf') || this.type.includes('word')) {
+      iconName = 'doc';
+    } else if (this.type.includes('mp4') || this.type.includes('mpeg')) {
+      iconName = 'video';
+    } else if (this.type.includes('mp3')) {
+      iconName = 'audio';
+    } else {
+      iconName = 'unknown';
+    }
+    return 'assets/img/' + iconName + '.png';
+  }
 
   public static compare(fOne: File, fTwo: File) {
     if (fOne.fileName < fTwo.fileName) {

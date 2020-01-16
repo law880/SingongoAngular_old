@@ -1,25 +1,27 @@
 <p>folder-view works!</p>
 <app-message [componentName]="compName"></app-message>
-<div *ngIf="!this.loading else showLoad" class="container">
+<div *ngIf="!this.loading && this.currentFolder && this.contents else showLoad" class="container">
   <h1>{{currentFolder.name}}</h1>
   <div class="row" id="actions">
     <div class="col-6">
-      <button type="button" class="btn-primary" (click)="openCreateFolModal()">Create a Folder</button>
+      <button type="button" class="btn-primary" (click)="openCreateFolderModal()">Create a Folder</button>
     </div>
     <div class="col-6">
-      <button type="button" class="btn-primary" (click)="uploadFile()">Upload a File</button>
+      <button type="button" class="btn-primary" (click)="openFileUploadModal()">Upload a File</button>
     </div>
   </div>
   <div class="row" id="content">
     <div class="col-2" *ngFor="let fol of this.contents.folders">
-      <div class="row">
-        <div class="col-12 text-center"><img src="assets/img/folder.png" width="100" /></div>
-      </div>
-      {{fol.folderName}}
+        <div class="row">
+          <div class="col-12 text-center"><img src="assets/img/folder.png" width="100"/></div>
+        </div>
+      <a (click)="goToFolder($event)" [id]="fol.folderId">
+        {{fol.folderName}}
+      </a>
     </div>
     <div class="col-2" *ngFor="let file of this.contents.files">
       <div class="row">
-        <div class="col-12"><img src="{{file.icon}}" width="100" /></div>
+        <div class="col-12"><img src="{{file.icon}}" width="100"/></div>
       </div>
       {{file.fileName}}
     </div>

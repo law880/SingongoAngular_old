@@ -1,0 +1,39 @@
+<div *ngIf="!this.loading && this.contentIndex !== -1 else showLoad" class="container">
+  <div class="row">
+    <div class="col-9" id="media">
+      <div *ngIf="fileInfo.icon.includes('doc')">PDF</div>
+      <div *ngIf="fileInfo.icon.includes('image')">Image</div>
+      <div *ngIf="fileInfo.icon.includes('video')">Video</div>
+      <div *ngIf="fileInfo.icon.includes('audio')">Audio</div>
+      <div *ngIf="fileInfo.icon.includes('unknown')">Unknown</div>
+    </div>
+    <div class="col-3" id="info">
+      <div class="row">
+        <div class="col-12">
+          <h3>{{fileInfo.name}}</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          Uploaded on {{fileInfo.dateCreated}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          Last modified on {{fileInfo.dateModified}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          Size: {{fileInfo.size}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button type="button" class="btn btn-primary">Download</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #showLoad><p>Loading...</p></ng-template>

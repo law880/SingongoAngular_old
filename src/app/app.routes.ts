@@ -5,6 +5,7 @@ import {HomeComponent} from './home/home.component';
 import {LogoutComponent} from './auth/components/logout/logout.component';
 import {ProfileViewComponent} from './home/profile-view/profile-view.component';
 import {FolderViewComponent} from './home/components/folder-view/folder-view.component';
+import {FileViewComponent} from './home/components/file-view/file-view.component';
 
 export const ROUTES: Routes = [
   {
@@ -23,9 +24,9 @@ export const ROUTES: Routes = [
   },
   {
     path: 'file/:id',
-    component: FolderViewComponent,
+    component: FileViewComponent,
     canActivate: [AuthGuardService]
-  },z
+  },
   {
     path: 'logout',
     component: LogoutComponent
@@ -38,5 +39,5 @@ export const ROUTES: Routes = [
   {
     path: '**',
     redirectTo: ''
-  },
+  }
 ];

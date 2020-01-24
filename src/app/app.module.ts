@@ -23,6 +23,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FolderCreateComponent } from './home/components/folder-view/folder-create/folder-create.component';
 import {FileSelectDirective} from "ng2-file-upload";
 import { FileUploadComponent } from './home/components/folder-view/file-upload/file-upload.component';
+import { FileViewComponent } from './home/components/file-view/file-view.component';
 
 // noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
@@ -38,7 +39,8 @@ import { FileUploadComponent } from './home/components/folder-view/file-upload/f
     MessageComponent,
     FolderCreateComponent,
     FileSelectDirective,
-    FileUploadComponent
+    FileUploadComponent,
+    FileViewComponent
   ],
   imports: [
     NgbModule,

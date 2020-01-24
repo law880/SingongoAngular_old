@@ -3,19 +3,18 @@ import {Folder} from '../models/folder';
 import {File} from '../models/file';
 import {AuthService} from '../../auth/services/auth.service';
 import {UserInfoService} from '../../auth/services/user-info.service';
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError, concatMap, map, tap} from 'rxjs/operators';
 import {MessageService} from '../../auth/services/message.service';
 import {Observable, of, Subscription, throwError} from 'rxjs';
 import {baseUrl, FILE_UPLOAD_COMPONENT, FOLDER_CREATE_COMPONENT, FOLDER_VIEW_COMPONENT} from '../../constants';
 import {FolderContents} from '../models/folder-contents';
-import {HistoryService} from './history.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContentService {
-  private baseId: string;
+  public homeId: string;
 
   public currentFolder: Folder = null;
 
@@ -26,19 +25,18 @@ export class ContentService {
     private userInfoService: UserInfoService,
     private http: HttpClient,
     private messageService: MessageService,
-    private history: HistoryService
   ) { }
 
-  httpOptions = {
+  private httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'})
   };
 
-  initializeContent() {
-    if (!this.baseId) {
-      return this.http.get(baseUrl + 'api/root', this.httpOptions).pipe(
+  public initializeContent() {
+    if (!this.homeId) {
+      return this.http.get(baseUrl + 'api/home', this.httpOptions).pipe(
         map(data => JSON.parse(JSON.stringify(data))),
         tap(data => {
-          this.baseId = data.id;
+          this.homeId = data.id;
           this.update(data.id).subscribe();
         }),
         catchError((error: HttpErrorResponse) => {
@@ -52,11 +50,11 @@ export class ContentService {
     }
   }
 
-  private fetchFolder(folderId: string = this.baseId): Observable<Folder> { // either root or desired folder
+  private fetchFolder(folderId: string = this.homeId): Observable<Folder> { // either home or desired folder
     return this.http.get<Folder>(baseUrl + 'api/' + folderId, this.httpOptions)
       .pipe(
         map(data => {
-          return new Folder(data.id, data.name, data.contents, data.parentId, data.dateCreated, data.dateModified);
+          return new Folder(data.id, data.name, data.contents, data.parentId, data.dateCreated, data.dateModified, data.size);
         }),
         catchError((error: HttpErrorResponse) => {
           this.messageService.delete(FOLDER_VIEW_COMPONENT);
@@ -65,34 +63,7 @@ export class ContentService {
         }));
   }
 
-  private fetchFolderContents(folderId: string): Observable<void> {
-    console.log(folderId);
-
-    return this.http.get<FolderContents>(baseUrl + 'api/' + folderId + '/contents', this.httpOptions)
-      .pipe(
-        map((data) => {
-          const files: Array<File> = [];
-          const folders: Array<Folder> = [];
-          data.files.forEach(value => {
-            console.log('in iteration');
-            files.push(new File(value.id, value.name,
-              value.size, value.dateCreated, value.dateModified,
-              value.type, value.extension));
-          });
-          data.folders.forEach(value => {
-            folders.push(new Folder(value.id, value.name,
-              value.contents, value.parentId, value.dateCreated, value.dateModified));
-          });
-          this.contents = new FolderContents(files, folders);
-        }),
-        catchError((error: HttpErrorResponse) => {
-          this.messageService.delete(FOLDER_VIEW_COMPONENT);
-          this.messageService.add(error.error.message, FOLDER_VIEW_COMPONENT);
-          return throwError(error);
-        }));
-  }
-
-  createFolder(currentFolderId: string, folderName: string): Observable<Subscription> {
+  public createFolder(currentFolderId: string, folderName: string): Observable<Subscription> {
     return of(this.http.post(baseUrl + 'api/' + currentFolderId + '/create-folder', {
       newFolderName: folderName
     }, this.httpOptions).pipe(
@@ -104,7 +75,7 @@ export class ContentService {
       .subscribe(() => this.update().subscribe()));
   }
 
-  uploadFile(fileToUpload, folderId: string): Observable<Subscription> {
+  public uploadFile(fileToUpload, folderId: string): Observable<Subscription> {
     const formData = new FormData();
     formData.append('file', fileToUpload);
     console.log(JSON.stringify(formData));
@@ -118,27 +89,26 @@ export class ContentService {
       ).subscribe(() => this.update().subscribe()));
   }
 
-  update(folderId: string = this.currentFolder.folderId): Observable<void> {
+  public update(folderId: string = this.currentFolder.folderId): Observable<void> {
     return this.fetchFolder(folderId).pipe(
       map(data => {
-        this.currentFolder = new Folder(data.id, data.name, data.contents, data.parentId, data.dateCreated, data.dateModified);
+        this.currentFolder = new Folder(data.id, data.name, data.contents, data.parentId, data.dateCreated, data.dateModified, data.size);
         return this.currentFolder;
       }),
       concatMap(data => this.http.get<FolderContents>(baseUrl + 'api/' + data.folderId + '/contents', this.httpOptions)),
       map(contents => {
-        const files: Array<File> = [];
-        const folders: Array<Folder> = [];
-        contents.files.forEach(value => {
-          console.log('in iteration');
-          files.push(new File(value.id, value.name,
-            value.size, value.dateCreated, value.dateModified,
-            value.type, value.extension));
+        const contentList: Array<File | Folder> = [];
+        contents.contents.forEach(value => {
+          if (value instanceof File) {
+            contentList.push(new File(value.id, value.name,
+              value.size, value.dateCreated, value.dateModified,
+              value.type, value.extension));
+          } else if (value instanceof Folder) {
+            contentList.push(new Folder(value.id, value.name,
+              value.contents, value.parentId, value.dateCreated, value.dateModified, value.size));
+          }
         });
-        contents.folders.forEach(value => {
-          folders.push(new Folder(value.id, value.name,
-            value.contents, value.parentId, value.dateCreated, value.dateModified));
-        });
-        this.contents = new FolderContents(files, folders);
+        this.contents = new FolderContents(contentList);
       }),
       catchError((error: HttpErrorResponse) => {
         this.messageService.delete(FOLDER_VIEW_COMPONENT);

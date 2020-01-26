@@ -9,6 +9,7 @@ import {MessageService} from '../../auth/services/message.service';
 import {Observable, of, Subscription, throwError} from 'rxjs';
 import {baseUrl, FILE_UPLOAD_COMPONENT, FOLDER_CREATE_COMPONENT, FOLDER_VIEW_COMPONENT} from '../../constants';
 import {FolderContents} from '../models/folder-contents';
+import {Location} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class ContentService {
     private userInfoService: UserInfoService,
     private http: HttpClient,
     private messageService: MessageService,
+    private location: Location
   ) { }
 
   private httpOptions = {
@@ -97,22 +99,25 @@ export class ContentService {
       }),
       concatMap(data => this.http.get<FolderContents>(baseUrl + 'api/' + data.folderId + '/contents', this.httpOptions)),
       map(contents => {
-        const contentList: Array<File | Folder> = [];
-        contents.contents.forEach(value => {
-          if (value instanceof File) {
-            contentList.push(new File(value.id, value.name,
-              value.size, value.dateCreated, value.dateModified,
-              value.type, value.extension));
-          } else if (value instanceof Folder) {
+        const contentList: Array<File | Folder> = new Array<File|Folder>();
+        contents.contentList.forEach((value: Folder | File) => {
+          if ((value as Folder).contents !== undefined) {
+            value = value as Folder;
             contentList.push(new Folder(value.id, value.name,
               value.contents, value.parentId, value.dateCreated, value.dateModified, value.size));
+          } else {
+            value = value as File;
+            contentList.push(new File(value.id, value.fileName,
+              value.size, value.dateCreated, value.dateModified,
+              value.type, value.extension));
           }
-        });
+          });
+
         this.contents = new FolderContents(contentList);
       }),
       catchError((error: HttpErrorResponse) => {
         this.messageService.delete(FOLDER_VIEW_COMPONENT);
-        this.messageService.add(error.error.message, FOLDER_VIEW_COMPONENT);
+        this.messageService.add(error.message, FOLDER_VIEW_COMPONENT);
         return throwError(error);
       }));
   }
@@ -120,4 +125,25 @@ export class ContentService {
   get folder(): Folder { return this.currentFolder; }
 
   get folderContents(): FolderContents { return this.contents; }
+
+  getFile(id: string): File {
+      let returnValue: File = null;
+      this.folderContents.contentList.forEach(value => {
+        if (value instanceof File && value.id === id) {
+          console.log('in getting if ' + value.name);
+          returnValue = value;
+        }
+      });
+      return returnValue;
+  }
+
+  public getStream(fileInfo: File): Observable<any>{
+    const valueFound = this.getFile(fileInfo.id);
+    if (!valueFound) {
+      alert('An error occurred. Please try again later');
+      this.location.back();
+      return of(null);
+    }
+    return this.http.get(baseUrl + 'api/' + fileInfo.id + '/stream', {responseType: 'blob'});
+  }
 }

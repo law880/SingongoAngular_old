@@ -23,7 +23,7 @@ export const ROUTES: Routes = [
     canActivate: [AuthGuardService]
   },
   {
-    path: 'file/:id',
+    path: 'folder/:folderId/file/:fileId',
     component: FileViewComponent,
     canActivate: [AuthGuardService]
   },

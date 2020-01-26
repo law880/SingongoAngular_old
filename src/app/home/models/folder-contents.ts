@@ -2,7 +2,7 @@ import {File} from './file';
 import {Folder} from './folder';
 
 export class FolderContents {
-  constructor(private contentList: Array<File | Folder>){ }
+  constructor( public contentList: Array<File | Folder>) {}
 
-  get contents() { return this.contentList.sort(File.compare); }
+  get contents() { return this.contentList; }
 }

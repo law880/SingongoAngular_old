@@ -1,12 +1,12 @@
 <app-message [componentName]="compName"></app-message>
 <div *ngIf="!this.loading && this.currentFolder && this.contents else showLoad" class="container">
   <h1>{{currentFolder.name === 'root' ? 'Home' : currentFolder.name}}</h1>
-  <div class="row" id="actions">
+  <div class="row mb-2" id="actions">
     <div class="col-4">
-      <button type="button" class="btn-primary" (click)="openCreateFolderModal()">Create a Folder</button>
+      <button type="button" class="btn btn-primary" (click)="openCreateFolderModal()">Create a Folder</button>
     </div>
     <div class="col-4">
-      <button type="button" class="btn-primary" (click)="openFileUploadModal()">Upload a File</button>
+      <button type="button" class="btn btn-primary" (click)="openFileUploadModal()">Upload a File</button>
     </div>
     <div class="col-4">
       <div class="dropdown">
@@ -23,17 +23,19 @@
       </div>
     </div>
   </div>
-  <div class="row" id="content">
-    <div class="col-xl-1 col-lg-2 col-md-3 col-sm-6" *ngFor="let con of this.contents.contents; index as i">
+  <div class="row mt-6" id="content">
+    <div class="col-xl-1 col-lg-2 col-md-3 col-sm-6" *ngFor="let con of this.contents.contentList; index as i" (click)="goTo(con)">
         <div class="row">
           <div class="col-12 text-center">
-            <div *ngIf="con.icon else showFolder"><img src="{{con.icon}}" width="100"/></div>
+            <img *ngIf="con.icon else showFolder" src="{{con.icon}}" width="100"/>
             <ng-template #showFolder><img src="assets/img/folder.png" width="100"/></ng-template>
           </div>
         </div>
-      <a (click)="goTo($event)" [id]="i">
-        {{con.name}}
-      </a>
+      <div class="row">
+        <div class="col-12 text-center">
+            {{con.name}}
+        </div>
+      </div>
     </div>
   </div>
 </div>

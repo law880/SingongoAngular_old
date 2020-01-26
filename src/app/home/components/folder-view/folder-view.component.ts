@@ -8,6 +8,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FolderCreateComponent} from './folder-create/folder-create.component';
 import {FileUploadComponent} from './file-upload/file-upload.component';
 import {ActivatedRoute, ParamMap, Router, UrlSegment} from '@angular/router';
+import {File} from '../../models/file';
 
 @Component({
   selector: 'app-folder-view',
@@ -33,8 +34,10 @@ export class FolderViewComponent implements OnInit {
     this.contentService.initializeContent().subscribe(() => {
       this.route.url.subscribe((segments: UrlSegment[]) => {
         if (segments[0].path === 'home') { // home view
+          console.log('home view');
           this.isHomeView = true;
           this.contentService.update(this.contentService.homeId).subscribe(() => {
+            console.log('done loading');
             this.loading = false;
           });
         } else { // get parameter for folder id
@@ -59,16 +62,11 @@ export class FolderViewComponent implements OnInit {
     folModalRef.componentInstance.folderId = this.currentFolder.folderId;
   }
 
-  goTo(event) {
-    const target = event.target || event.currentTarget;
-    const idAttr = target.attributes.id;
-    const clickedIndex: string = idAttr.nodeValue;
-    const index: number = +clickedIndex;
-    const clickedId: string = this.contents.contents[index].id;
-    if (this.contents.contents[index] instanceof Folder) {
-      this.router.navigate(['folder/' + clickedId]);
-    } else {
-      this.router.navigate(['file/' + clickedId]);
+  goTo(chosen: File | Folder) {
+    if (chosen instanceof Folder) {
+      this.router.navigate(['folder/' + chosen.id]);
+    } else if (chosen instanceof File) {
+      this.router.navigate(['folder/' + this.contentService.folder.id + '/file/' + chosen.id]);
     }
   }
 
@@ -76,6 +74,6 @@ export class FolderViewComponent implements OnInit {
 
   get currentFolder(): Folder { return this.contentService.folder; }
 
-  get contents(): FolderContents { return this.contentService.folderContents; }
+  get contents(): FolderContents { return this.contentService.contents; }
 
 }

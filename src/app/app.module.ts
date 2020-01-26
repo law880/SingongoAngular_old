@@ -24,6 +24,9 @@ import { FolderCreateComponent } from './home/components/folder-view/folder-crea
 import {FileSelectDirective} from "ng2-file-upload";
 import { FileUploadComponent } from './home/components/folder-view/file-upload/file-upload.component';
 import { FileViewComponent } from './home/components/file-view/file-view.component';
+import {DatePipe} from "@angular/common";
+import {NgxExtendedPdfViewerModule} from "ngx-extended-pdf-viewer";
+import { FileSizePipe } from './home/file-size.pipe';
 
 // noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
@@ -40,7 +43,8 @@ import { FileViewComponent } from './home/components/file-view/file-view.compone
     FolderCreateComponent,
     FileSelectDirective,
     FileUploadComponent,
-    FileViewComponent
+    FileViewComponent,
+    FileSizePipe
   ],
   imports: [
     NgbModule,
@@ -50,7 +54,8 @@ import { FileViewComponent } from './home/components/file-view/file-view.compone
     ),
     BrowserModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxExtendedPdfViewerModule
   ],
   providers: [
     AuthGuardService,
@@ -61,7 +66,9 @@ import { FileViewComponent } from './home/components/file-view/file-view.compone
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
       multi: true
-    }],
+    },
+    DatePipe,
+  FileSizePipe],
   bootstrap: [AppComponent],
   entryComponents: [FolderCreateComponent, FileUploadComponent]
 })

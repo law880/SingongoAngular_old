@@ -2,7 +2,7 @@ export class File {
   constructor(
     public id: string,
     public name: string,
-    public size: bigint,
+    public size: number,
     public dateCreated: Date,
     public dateModified: Date,
     public type: string,

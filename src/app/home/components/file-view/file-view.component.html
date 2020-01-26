@@ -1,36 +1,38 @@
-<div *ngIf="!this.loading && this.contentIndex !== -1 else showLoad" class="container">
+<div *ngIf="!this.loading else showLoad" class="container">
   <div class="row">
-    <div class="col-9" id="media">
-      <div *ngIf="fileInfo.icon.includes('doc')">PDF</div>
-      <div *ngIf="fileInfo.icon.includes('image')">Image</div>
-      <div *ngIf="fileInfo.icon.includes('video')">Video</div>
-      <div *ngIf="fileInfo.icon.includes('audio')">Audio</div>
-      <div *ngIf="fileInfo.icon.includes('unknown')">Unknown</div>
+    <div class="col-8" id="media">
+      <ng-container [ngSwitch]="type">
+        <div *ngSwitchCase="'pdf'"><ngx-extended-pdf-viewer class="img-fluid" [src]="url" useBrowserLocale="true" height="120vh"></ngx-extended-pdf-viewer></div>
+        <div *ngSwitchCase="'audio'">Audio</div>
+        <div *ngSwitchCase="'video'">Video</div>
+        <div *ngSwitchCase="'image'"><img [src]="getSanitizedUrl()" class="img-fluid" /></div>
+        <div *ngSwitchCase="'unknown'">Unknown</div>
+      </ng-container>
     </div>
-    <div class="col-3" id="info">
-      <div class="row">
+    <div class="col-4" id="info">
+      <div class="row mt-1">
         <div class="col-12">
-          <h3>{{fileInfo.name}}</h3>
+          <h3>{{currentFile.name}}</h3>
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-3">
         <div class="col-12">
-          Uploaded on {{fileInfo.dateCreated}}
+          Uploaded on {{this.datePipe.transform(currentFile.dateCreated, 'dd/MM/yyyy')}}
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-2">
         <div class="col-12">
-          Last modified on {{fileInfo.dateModified}}
+          Last modified on {{this.datePipe.transform(currentFile.dateModified, 'dd/MM/yyyy')}}
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-2">
         <div class="col-12">
-          Size: {{fileInfo.size}}
+          Size: {{this.sizePipe.transform(currentFile.size)}}
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-2">
         <div class="col-12">
-          <button type="button" class="btn btn-primary">Download</button>
+          <a [href]="getSanitizedUrl()" type="button" class="btn btn-primary" [download]="currentFile.name">Download</a>
         </div>
       </div>
     </div>

@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ContentService} from '../../services/content.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {File} from '../../models/file';
+import {DatePipe, Location} from '@angular/common';
+import {DomSanitizer} from "@angular/platform-browser";
+import {FileSizePipe} from "../../file-size.pipe";
 
 @Component({
   selector: 'app-file-view',
@@ -11,35 +14,77 @@ import {File} from '../../models/file';
 export class FileViewComponent implements OnInit {
   public loading = false;
 
-  public contentIndex = -1;
+  public currentFile: File = null;
 
+  public url: string = null;
   constructor(
     private contentService: ContentService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location,
+    private datePipe: DatePipe,
+    private sanitizer: DomSanitizer,
+    private sizePipe: FileSizePipe
   ) { }
 
   ngOnInit() {
+    this.loading = true;
     this.route.paramMap.subscribe((params: ParamMap) => {
-      if (params.has('id')) {
-        const folderId = params.get('id');
-        console.log(folderId);
-        if (folderId !== this.contentService.folder.id) {
-          alert('An error occurred. Please try again later. Returning to the previous page.');
-          this.router.navigate(['folder/' + folderId]);
-        }
-        this.route.queryParamMap.subscribe((queryData: ParamMap) => {
-          if (queryData.has('index')) {
-            this.contentIndex = +queryData.get('index');
+      if (params.has('folderId') && params.has('fileId')) {
+        const folderId: string = params.get('folderId');
+        const fileId: string = params.get('fileId');
+        if (this.contentService.folder === null) {
+          this.contentService.initializeContent().subscribe(() => {
+            this.contentService.update(folderId)
+              .subscribe(() => {
+                this.currentFile = this.contentService.getFile(fileId);
+                console.log(this.currentFile.type);
+                if (this.currentFile === null) {
+                  alert('File not found. Returning to previous page');
+                  this.location.back();
+                  this.loading = false;
+                  return;
+                }
+                // TO-DO: fetch stream for media player
+                this.contentService.getStream(this.currentFile).subscribe((data: Blob) => {
+                  this.url = window.URL.createObjectURL(data);
+                  this.loading = false;
+                });
+              });
+          });
+        } else {
+          this.currentFile = this.contentService.getFile(fileId);
+          if (this.currentFile === null) {
+            alert('File not found. Returning to previous page');
+            this.location.back();
+            this.loading = false;
+            return;
           }
           // TO-DO: fetch stream for media player
-        });
+          this.contentService.getStream(this.currentFile).subscribe((data: Blob) => {
+            this.url = window.URL.createObjectURL(data);
+            this.loading = false;
+          });
+        }
       }
     });
   }
 
-  get fileInfo(): File {
-    return this.contentIndex === -1 ? null : this.contentService.folderContents.files[this.contentIndex]
+  get type(): string {
+    if (this.currentFile.type.includes('pdf')) {
+      return 'pdf';
+    } else if (this.currentFile.type.includes('video')) {
+      return 'video';
+    } else if (this.currentFile.type.includes('audio')) {
+      return 'audio';
+    } else if (this.currentFile.type.includes('image')) {
+      return 'image';
+    } else {
+      return 'unknown';
+    }
   }
 
+  getSanitizedUrl() {
+    return this.sanitizer.bypassSecurityTrustUrl(this.url);
+  }
 }

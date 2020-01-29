@@ -3,32 +3,32 @@
   <h1>{{currentFolder.name === 'root' ? 'Home' : currentFolder.name}}</h1>
   <div class="row mb-2" id="actions">
     <div class="col-4">
-      <button type="button" class="btn btn-primary" (click)="openCreateFolderModal()">Create a Folder</button>
+      <button type="button" class="btn btn-secondary" (click)="openCreateFolderModal()">Create a Folder</button>
     </div>
     <div class="col-4">
-      <button type="button" class="btn btn-primary" (click)="openFileUploadModal()">Upload a File</button>
+      <button type="button" class="btn btn-secondary" (click)="openFileUploadModal()">Upload a File</button>
     </div>
     <div class="col-4">
       <div class="dropdown">
-        <button class="btn dropdown-toggle">
+        <button class="btn dropdown-toggle" type="button" aria-haspopup="true" id="sortByButton" data-toggle="dropdown" aria-expanded="false" >
           Sort by:
         </button>
-        <div class="dropdown-menu">
-          <a class="dropdown-item">Name</a>
-          <a class="dropdown-item">Date created</a>
-          <a class="dropdown-item">Date modified</a>
-          <a class="dropdown-item">Size</a>
-          <a class="dropdown-item">Type</a>
+        <div class="dropdown-menu" aria-labelledby="sortByButton">
+          <a class="dropdown-item" (click)="sortBy('name')">Name</a>
+          <a class="dropdown-item" (click)="sortBy('created')">Date created</a>
+          <a class="dropdown-item" (click)="sortBy('modified')">Date modified</a>
+          <a class="dropdown-item" (click)="sortBy('size')">Size</a>
+          <a class="dropdown-item" (click)="sortBy('type')">Type</a>
         </div>
       </div>
     </div>
   </div>
   <div class="row mt-6" id="content">
-    <div class="col-xl-1 col-lg-2 col-md-3 col-sm-6" *ngFor="let con of this.contents.contentList; index as i" (click)="goTo(con)">
+    <div class="col" *ngFor="let con of this.contents.contentList; index as i; o" (click)="goTo(con)">
         <div class="row">
           <div class="col-12 text-center">
-            <img *ngIf="con.icon else showFolder" src="{{con.icon}}" width="100"/>
-            <ng-template #showFolder><img src="assets/img/folder.png" width="100"/></ng-template>
+            <img *ngIf="con.icon else showFolder" src="{{con.icon}}" width="100" class="img-thumbnail img-fluid" />
+            <ng-template #showFolder><img src="assets/img/folder.png" width="100" class="img-thumbnail" /></ng-template>
           </div>
         </div>
       <div class="row">
@@ -39,4 +39,4 @@
     </div>
   </div>
 </div>
-<ng-template #showLoad><p>Loading...</p></ng-template>
+<ng-template #showLoad><app-load-display></app-load-display></ng-template>

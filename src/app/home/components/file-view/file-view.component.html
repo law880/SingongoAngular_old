@@ -3,9 +3,15 @@
     <div class="col-8" id="media">
       <ng-container [ngSwitch]="type">
         <div *ngSwitchCase="'pdf'"><ngx-extended-pdf-viewer class="img-fluid" [src]="url" useBrowserLocale="true" height="120vh"></ngx-extended-pdf-viewer></div>
-        <div *ngSwitchCase="'audio'">Audio</div>
-        <div *ngSwitchCase="'video'">Video</div>
-        <div *ngSwitchCase="'image'"><img [src]="getSanitizedUrl()" class="img-fluid" /></div>
+        <div *ngSwitchCase="'audio'"><mat-basic-audio-player [audioUrl]="url" [title]="currentFile.name" [autoPlay]="false" muted="muted" [displayTitle]="currentFile.name" [displayVolumeControls]="true"></mat-basic-audio-player></div>
+        <div *ngSwitchCase="'video'" class="">
+          <vg-player>
+            <video [vgMedia]="media" #media id="vid" preload="auto" controls>
+              <source [src]="url" [type]="currentFile.type">
+            </video>
+          </vg-player>
+        </div>
+        <div *ngSwitchCase="'image'"><img [src]="url" class="img-fluid" /></div>
         <div *ngSwitchCase="'unknown'">Unknown</div>
       </ng-container>
     </div>
@@ -32,10 +38,10 @@
       </div>
       <div class="row mt-2">
         <div class="col-12">
-          <a [href]="getSanitizedUrl()" type="button" class="btn btn-primary" [download]="currentFile.name">Download</a>
+          <a [href]="url" type="button" class="btn" [download]="currentFile.name">Download</a>
         </div>
       </div>
     </div>
   </div>
 </div>
-<ng-template #showLoad><p>Loading...</p></ng-template>
+<ng-template #showLoad><app-load-display></app-load-display></ng-template>

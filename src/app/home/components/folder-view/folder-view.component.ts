@@ -9,6 +9,7 @@ import {FolderCreateComponent} from './folder-create/folder-create.component';
 import {FileUploadComponent} from './file-upload/file-upload.component';
 import {ActivatedRoute, ParamMap, Router, UrlSegment} from '@angular/router';
 import {File} from '../../models/file';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-folder-view',
@@ -48,6 +49,10 @@ export class FolderViewComponent implements OnInit {
             }
           });
         }
+      }, (error) => {
+        if (error) {
+          this.loading = false;
+        }
       });
     });
   }
@@ -75,5 +80,19 @@ export class FolderViewComponent implements OnInit {
   get currentFolder(): Folder { return this.contentService.folder; }
 
   get contents(): FolderContents { return this.contentService.contents; }
+
+  sortBy(attribute: string) {
+    if (attribute === 'name') {
+      this.contentService.sortByName();
+    } else if (attribute === 'created') {
+      this.contentService.sortByCreation();
+    } else if (attribute === 'modified') {
+      this.contentService.sortByModification();
+    } else if (attribute === 'size') {
+      this.contentService.sortBySize();
+    } else if (attribute === 'type') {
+      this.contentService.sortByType();
+    }
+  }
 
 }

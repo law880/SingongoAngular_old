@@ -18,6 +18,7 @@ export class MessageService {
   }
 
   getMessage(component: string): string {
+    console.log(this.messages.get(component))
     return this.messages.get(component);
   }
 

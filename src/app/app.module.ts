@@ -27,6 +27,12 @@ import { FileViewComponent } from './home/components/file-view/file-view.compone
 import {DatePipe} from "@angular/common";
 import {NgxExtendedPdfViewerModule} from "ngx-extended-pdf-viewer";
 import { FileSizePipe } from './home/file-size.pipe';
+import {NgxAudioPlayerModule} from 'ngx-audio-player';
+import { LoadDisplayComponent } from './load-display/load-display.component';
+import {VgCoreModule} from 'videogular2/compiled/src/core/core';
+import {VgControlsModule} from 'videogular2/compiled/src/controls/controls';
+import {VgOverlayPlayModule} from 'videogular2/compiled/src/overlay-play/overlay-play';
+import {VgBufferingModule} from 'videogular2/compiled/src/buffering/buffering';
 
 // noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
@@ -44,7 +50,8 @@ import { FileSizePipe } from './home/file-size.pipe';
     FileSelectDirective,
     FileUploadComponent,
     FileViewComponent,
-    FileSizePipe
+    FileSizePipe,
+    LoadDisplayComponent
   ],
   imports: [
     NgbModule,
@@ -55,7 +62,12 @@ import { FileSizePipe } from './home/file-size.pipe';
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxExtendedPdfViewerModule
+    NgxExtendedPdfViewerModule,
+    NgxAudioPlayerModule,
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ],
   providers: [
     AuthGuardService,

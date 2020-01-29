@@ -2,6 +2,8 @@ export class Folder {
   public static FOLDER_TYPE = 'folder';
   public static FILE_TYPE = 'file';
 
+  private type = 'folder';
+
   constructor(
     public id: string,
     public name: string,
@@ -34,4 +36,6 @@ export class Folder {
     }
     return 0;
   }
+
+  get folderType() { return this.type; }
 }

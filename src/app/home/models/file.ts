@@ -25,13 +25,13 @@ export class File {
 
   get icon() {
     let iconName;
-    if (this.type.includes('jpg') || this.type.includes('png') || this.type.includes('bmp')) {
+    if (this.type.includes('image')) {
       iconName = 'image';
-    } else if (this.type.includes('pdf') || this.type.includes('word')) {
+    } else if (this.type.includes('pdf')) {
       iconName = 'doc';
-    } else if (this.type.includes('mp4') || this.type.includes('mpeg')) {
+    } else if (this.type.includes('video')) {
       iconName = 'video';
-    } else if (this.type.includes('mp3')) {
+    } else if (this.type.includes('audio')) {
       iconName = 'audio';
     } else {
       iconName = 'unknown';

@@ -23,7 +23,6 @@ export class FileViewComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private datePipe: DatePipe,
-    private sanitizer: DomSanitizer,
     private sizePipe: FileSizePipe
   ) { }
 
@@ -46,8 +45,8 @@ export class FileViewComponent implements OnInit {
                   return;
                 }
                 // TO-DO: fetch stream for media player
-                this.contentService.getStream(this.currentFile).subscribe((data: Blob) => {
-                  this.url = window.URL.createObjectURL(data);
+                this.contentService.getStream(this.currentFile).subscribe((url: string) => {
+                  this.url = url;
                   this.loading = false;
                 });
               });
@@ -61,8 +60,8 @@ export class FileViewComponent implements OnInit {
             return;
           }
           // TO-DO: fetch stream for media player
-          this.contentService.getStream(this.currentFile).subscribe((data: Blob) => {
-            this.url = window.URL.createObjectURL(data);
+          this.contentService.getStream(this.currentFile).subscribe((url: string) => {
+            this.url = url;
             this.loading = false;
           });
         }
@@ -82,9 +81,5 @@ export class FileViewComponent implements OnInit {
     } else {
       return 'unknown';
     }
-  }
-
-  getSanitizedUrl() {
-    return this.sanitizer.bypassSecurityTrustUrl(this.url);
   }
 }

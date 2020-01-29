@@ -10,6 +10,7 @@ import {Observable, of, Subscription, throwError} from 'rxjs';
 import {baseUrl, FILE_UPLOAD_COMPONENT, FOLDER_CREATE_COMPONENT, FOLDER_VIEW_COMPONENT} from '../../constants';
 import {FolderContents} from '../models/folder-contents';
 import {Location} from "@angular/common";
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,8 @@ export class ContentService {
     private userInfoService: UserInfoService,
     private http: HttpClient,
     private messageService: MessageService,
-    private location: Location
+    private location: Location,
+    private sanitizer: DomSanitizer
   ) { }
 
   private httpOptions = {
@@ -43,7 +45,14 @@ export class ContentService {
         }),
         catchError((error: HttpErrorResponse) => {
           this.messageService.delete(FOLDER_VIEW_COMPONENT);
-          this.messageService.add(error.error.message, FOLDER_VIEW_COMPONENT);
+          if (error.message && error.message.toLocaleLowerCase().includes('unknown')) {
+            this.messageService.add('An unknown error occurred. Please try again later', FOLDER_VIEW_COMPONENT);
+          } else if (error.error && error.error.message) {
+            this.messageService.add(error.error.message, FOLDER_VIEW_COMPONENT);
+          } else {
+            this.messageService.add(error.message, FOLDER_VIEW_COMPONENT);
+          }
+          console.log('error home ' + error.message);
           return throwError(error);
         })
       );
@@ -144,6 +153,31 @@ export class ContentService {
       this.location.back();
       return of(null);
     }
-    return this.http.get(baseUrl + 'api/' + fileInfo.id + '/stream', {responseType: 'blob'});
+    return this.http.get(baseUrl + 'api/' + fileInfo.id + '/stream', {responseType: 'blob'})
+      .pipe(
+        map((stream: Blob) => {
+          return this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(stream));
+        })
+      );
+  }
+
+  public sortByName() {
+    this.contents.contentList.sort(FolderContents.compare('name'));
+  }
+
+  public sortByCreation() {
+    this.contents.contentList.sort(FolderContents.compare('dateCreated'));
+  }
+
+  public sortByModification() {
+    this.contents.contentList.sort(FolderContents.compare('dateModified'));
+  }
+
+  public sortBySize() {
+    this.contents.contentList.sort(FolderContents.compare('size'));
+  }
+
+  public sortByType() {
+    this.contents.contentList.sort(FolderContents.compare('type'));
   }
 }

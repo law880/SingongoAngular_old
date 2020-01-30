@@ -33,6 +33,7 @@ import {VgCoreModule} from 'videogular2/compiled/src/core/core';
 import {VgControlsModule} from 'videogular2/compiled/src/controls/controls';
 import {VgOverlayPlayModule} from 'videogular2/compiled/src/overlay-play/overlay-play';
 import {VgBufferingModule} from 'videogular2/compiled/src/buffering/buffering';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 // noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
@@ -67,7 +68,8 @@ import {VgBufferingModule} from 'videogular2/compiled/src/buffering/buffering';
     VgCoreModule,
     VgControlsModule,
     VgOverlayPlayModule,
-    VgBufferingModule
+    VgBufferingModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     AuthGuardService,

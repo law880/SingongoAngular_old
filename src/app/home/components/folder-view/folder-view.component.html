@@ -24,7 +24,7 @@
     </div>
   </div>
   <div class="row mt-6" id="content">
-    <div class="col" *ngFor="let con of this.contents.contentList; index as i; o" (click)="goTo(con)">
+    <div class="col" *ngFor="let con of this.contents.contentList; index as i;" (click)="goTo(con)">
         <div class="row">
           <div class="col-12 text-center">
             <img *ngIf="con.icon else showFolder" src="{{con.icon}}" width="100" class="img-thumbnail img-fluid" />
@@ -39,4 +39,4 @@
     </div>
   </div>
 </div>
-<ng-template #showLoad><app-load-display></app-load-display></ng-template>
+<ng-template #showLoad><mat-progress-spinner></mat-progress-spinner></ng-template>

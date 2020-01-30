@@ -48,9 +48,9 @@ export class FileViewComponent implements OnInit {
                 this.contentService.getStream(this.currentFile).subscribe((url: string) => {
                   this.url = url;
                   this.loading = false;
-                });
+                }, error => this.handleUnknownError(error));
               });
-          });
+          }, error => this.handleUnknownError(error));
         } else {
           this.currentFile = this.contentService.getFile(fileId);
           if (this.currentFile === null) {
@@ -63,7 +63,7 @@ export class FileViewComponent implements OnInit {
           this.contentService.getStream(this.currentFile).subscribe((url: string) => {
             this.url = url;
             this.loading = false;
-          });
+          }, error => this.handleUnknownError(error));
         }
       }
     });
@@ -81,5 +81,11 @@ export class FileViewComponent implements OnInit {
     } else {
       return 'unknown';
     }
+  }
+
+  private handleUnknownError(error: any) {
+    alert('An unknown error occurred. Please try again later.\nReturning to the previous page');
+    this.location.back();
+    this.loading = false;
   }
 }

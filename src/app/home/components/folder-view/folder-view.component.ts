@@ -10,6 +10,9 @@ import {FileUploadComponent} from './file-upload/file-upload.component';
 import {ActivatedRoute, ParamMap, Router, UrlSegment} from '@angular/router';
 import {File} from '../../models/file';
 import {HttpErrorResponse} from '@angular/common/http';
+import {FileSizePipe} from '../../file-size.pipe';
+import {DatePipe} from '@angular/common';
+import {SafeUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-folder-view',
@@ -27,7 +30,9 @@ export class FolderViewComponent implements OnInit {
     private fb: FormBuilder,
     private modalService: NgbModal,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private sizePipe: FileSizePipe,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -93,6 +98,13 @@ export class FolderViewComponent implements OnInit {
     } else if (attribute === 'type') {
       this.contentService.sortByType();
     }
+  }
+
+  downloadFolder() {
+    this.contentService.downloadCurrentFolder()
+      .subscribe((url: SafeUrl) => {
+        window.open(url.toString());
+      });
   }
 
 }

@@ -23,17 +23,48 @@
       </div>
     </div>
   </div>
-  <div class="row mt-6" id="content">
-    <div class="col" *ngFor="let con of this.contents.contentList; index as i;" (click)="goTo(con)">
-        <div class="row">
-          <div class="col-12 text-center">
-            <img *ngIf="con.icon else showFolder" src="{{con.icon}}" width="100" class="img-thumbnail img-fluid" />
-            <ng-template #showFolder><img src="assets/img/folder.png" width="100" class="img-thumbnail" /></ng-template>
+  <div class="row">
+    <div class="col-8" id="content">
+      <div class="row">
+        <div class="col" *ngFor="let con of this.contents.contentList; index as i;" (click)="goTo(con)">
+          <div class="row">
+            <div class="col-12 text-center">
+              <img *ngIf="con.icon else showFolder" src="{{con.icon}}" width="100" class="img-thumbnail img-fluid" />
+              <ng-template #showFolder><img src="assets/img/folder.png" width="100" class="img-thumbnail" /></ng-template>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 text-center">
+              {{con.name}}
+            </div>
           </div>
         </div>
-      <div class="row">
-        <div class="col-12 text-center">
-            {{con.name}}
+      </div>
+    </div>
+    <div class="col-4" id="info">
+      <div class="row mt-1">
+        <div class="col-12">
+          <h3>{{currentFolder.name}}</h3>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12">
+          Uploaded on {{this.datePipe.transform(currentFolder.dateCreated, 'dd/MM/yyyy')}}
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-12">
+          Last modified on {{this.datePipe.transform(currentFolder.dateModified, 'dd/MM/yyyy')}}
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-12">
+          Size: {{this.sizePipe.transform(currentFolder.size)}}
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-12">
+          <a type="button" class="btn" [download]="currentFolder.name" (click)="downloadFolder()">Download Folder</a>
         </div>
       </div>
     </div>

@@ -9,3 +9,5 @@ export const FOLDER_VIEW_COMPONENT = 'FolderView';
 export const FOLDER_CREATE_COMPONENT = 'FolderCreate';
 
 export const FILE_UPLOAD_COMPONENT = 'FileUpload';
+
+export const FILE_VIEW_COMPONENT = 'FileView';

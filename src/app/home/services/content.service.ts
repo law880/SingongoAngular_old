@@ -7,10 +7,10 @@ import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError, concatMap, map, tap} from 'rxjs/operators';
 import {MessageService} from '../../auth/services/message.service';
 import {Observable, of, Subscription, throwError} from 'rxjs';
-import {baseUrl, FILE_UPLOAD_COMPONENT, FOLDER_CREATE_COMPONENT, FOLDER_VIEW_COMPONENT} from '../../constants';
+import {baseUrl, FILE_UPLOAD_COMPONENT, FILE_VIEW_COMPONENT, FOLDER_CREATE_COMPONENT, FOLDER_VIEW_COMPONENT} from '../../constants';
 import {FolderContents} from '../models/folder-contents';
-import {Location} from "@angular/common";
-import {DomSanitizer} from '@angular/platform-browser';
+import {Location} from '@angular/common';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -44,16 +44,15 @@ export class ContentService {
           this.update(data.id).subscribe();
         }),
         catchError((error: HttpErrorResponse) => {
-          this.messageService.delete(FOLDER_VIEW_COMPONENT);
+          let errorMessage: string;
           if (error.message && error.message.toLocaleLowerCase().includes('unknown')) {
-            this.messageService.add('An unknown error occurred. Please try again later', FOLDER_VIEW_COMPONENT);
+            errorMessage = 'An unknown error occurred. Please try again later';
           } else if (error.error && error.error.message) {
-            this.messageService.add(error.error.message, FOLDER_VIEW_COMPONENT);
+            errorMessage = error.error.message;
           } else {
-            this.messageService.add(error.message, FOLDER_VIEW_COMPONENT);
+            errorMessage = error.message;
           }
-          console.log('error home ' + error.message);
-          return throwError(error);
+          return this.handleError(FOLDER_VIEW_COMPONENT, error, errorMessage);
         })
       );
     } else {
@@ -67,22 +66,20 @@ export class ContentService {
         map(data => {
           return new Folder(data.id, data.name, data.contents, data.parentId, data.dateCreated, data.dateModified, data.size);
         }),
-        catchError((error: HttpErrorResponse) => {
-          this.messageService.delete(FOLDER_VIEW_COMPONENT);
-          this.messageService.add(error.error.message, FOLDER_VIEW_COMPONENT);
-          return throwError(error);
-        }));
+        catchError((error: HttpErrorResponse) =>
+          this.handleError(FILE_UPLOAD_COMPONENT, error, error.error ? error.error.message : error.message)
+        )
+      );
   }
 
   public createFolder(currentFolderId: string, folderName: string): Observable<Subscription> {
     return of(this.http.post(baseUrl + 'api/' + currentFolderId + '/create-folder', {
       newFolderName: folderName
     }, this.httpOptions).pipe(
-      catchError((error: HttpErrorResponse) => {
-        this.messageService.delete(FOLDER_CREATE_COMPONENT);
-        this.messageService.add(error.error.message, FOLDER_CREATE_COMPONENT);
-        return throwError(error);
-      }))
+      catchError((error: HttpErrorResponse) =>
+        this.handleError(FILE_UPLOAD_COMPONENT, error, error.error ? error.error.message : error.message)
+      )
+    )
       .subscribe(() => this.update().subscribe()));
   }
 
@@ -92,11 +89,9 @@ export class ContentService {
     console.log(JSON.stringify(formData));
     return of(this.http.post(baseUrl + 'api/' + folderId + '/upload', formData)
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          this.messageService.delete(FILE_UPLOAD_COMPONENT);
-          this.messageService.add(error.error.message, FOLDER_CREATE_COMPONENT);
-          return throwError(error);
-        })
+        catchError((error: HttpErrorResponse) =>
+          this.handleError(FILE_UPLOAD_COMPONENT, error, error.error ? error.error.message : error.message)
+        )
       ).subscribe(() => this.update().subscribe()));
   }
 
@@ -124,11 +119,8 @@ export class ContentService {
 
         this.contents = new FolderContents(contentList);
       }),
-      catchError((error: HttpErrorResponse) => {
-        this.messageService.delete(FOLDER_VIEW_COMPONENT);
-        this.messageService.add(error.message, FOLDER_VIEW_COMPONENT);
-        return throwError(error);
-      }));
+      catchError((error: HttpErrorResponse) => this.handleError(FOLDER_VIEW_COMPONENT, error, error.message))
+    );
   }
 
   get folder(): Folder { return this.currentFolder; }
@@ -146,7 +138,7 @@ export class ContentService {
       return returnValue;
   }
 
-  public getStream(fileInfo: File): Observable<any>{
+  public getStream(fileInfo: File): Observable<SafeUrl> {
     const valueFound = this.getFile(fileInfo.id);
     if (!valueFound) {
       alert('An error occurred. Please try again later');
@@ -157,7 +149,10 @@ export class ContentService {
       .pipe(
         map((stream: Blob) => {
           return this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(stream));
-        })
+        }),
+        catchError(error =>
+          this.handleError(FILE_VIEW_COMPONENT, error, 'An unknown error occured while acquiring this file. Please try again later.')
+        )
       );
   }
 
@@ -179,5 +174,32 @@ export class ContentService {
 
   public sortByType() {
     this.contents.contentList.sort(FolderContents.compare('type'));
+  }
+
+  public downloadCurrentFolder(): Observable<SafeUrl> {
+    if (this.currentFolder) {
+      return this.http.get(baseUrl + 'api/' + this.currentFolder.id + '/download', {responseType: 'blob'})
+        .pipe(
+          map((stream: Blob) => {
+            return this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(stream));
+          }),
+          catchError(error => this.handleError(FOLDER_VIEW_COMPONENT, error,
+            'An unknown error occurred while attempting to download this file. Please try again later.'))
+        );
+    } else {
+      return this.handleError(FOLDER_VIEW_COMPONENT, null,
+        'An unknown error occurred while attempting to download this file. Please try again later.');
+    }
+
+  }
+
+  private handleError(throwingComponent: string, error: any, message?: string): Observable<never> {
+    this.messageService.delete(throwingComponent);
+    this.messageService.add(message, throwingComponent);
+    if (error) {
+      return throwError(error);
+    } else {
+      return throwError(null);
+    }
   }
 }

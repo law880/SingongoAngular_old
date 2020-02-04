@@ -1,11 +1,11 @@
 import {Routes} from '@angular/router';
-import {LoginFormComponent} from './auth/login-form/login-form.component';
+import {LoginFormComponent} from './auth/components/login-form/login-form.component';
 import {AuthGuardService} from './auth/services/auth-guard.service';
-import {HomeComponent} from './home/home.component';
+import {HomeComponent} from './content/home.component';
 import {LogoutComponent} from './auth/components/logout/logout.component';
-import {ProfileViewComponent} from './home/profile-view/profile-view.component';
-import {FolderViewComponent} from './home/components/folder-view/folder-view.component';
-import {FileViewComponent} from './home/components/file-view/file-view.component';
+import {ProfileViewComponent} from './content/profile-view/profile-view.component';
+import {FolderViewComponent} from './content/components/folder-view/folder-view.component';
+import {FileViewComponent} from './content/components/file-view/file-view.component';
 
 export const ROUTES: Routes = [
   {

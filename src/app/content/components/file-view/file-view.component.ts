@@ -4,7 +4,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {File} from '../../models/file';
 import {DatePipe, Location} from '@angular/common';
 import {DomSanitizer} from "@angular/platform-browser";
-import {FileSizePipe} from "../../file-size.pipe";
+import {FileSizePipe} from "../../../general/pipes/file-size.pipe";
 
 @Component({
   selector: 'app-file-view',

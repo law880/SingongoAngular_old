@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {Login} from '../models/login';
+import {Login} from '../../models/login';
 import {FormBuilder, Validators} from '@angular/forms';
-import {Token} from '../models/token';
+import {Token} from '../../models/token';
 import {Router} from '@angular/router';
-import {AuthService} from '../services/auth.service';
-import {UserInfoService} from '../services/user-info.service';
-import {LOGIN_FORM_COMPONENT} from '../../constants';
+import {AuthService} from '../../services/auth.service';
+import {UserInfoService} from '../../services/user-info.service';
+import {LOGIN_FORM_COMPONENT} from '../../../constants';
 
 @Component({
   selector: 'app-login-form',

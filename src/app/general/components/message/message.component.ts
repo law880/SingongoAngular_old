@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {MessageService} from '../auth/services/message.service';
-import {LoginFormComponent} from '../auth/login-form/login-form.component';
+import {MessageService} from '../../../auth/services/message.service';
+import {LoginFormComponent} from '../../../auth/components/login-form/login-form.component';
 
 @Component({
   selector: 'app-message',

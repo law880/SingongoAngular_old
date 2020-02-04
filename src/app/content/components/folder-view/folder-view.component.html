@@ -1,6 +1,6 @@
 <app-message [componentName]="compName"></app-message>
 <div *ngIf="!this.loading && this.currentFolder && this.contents else showLoad" class="container">
-  <h1>{{currentFolder.name === 'root' ? 'Home' : currentFolder.name}}</h1>
+  <h1>{{currentFolder.name === 'home' ? 'Home' : currentFolder.name}}</h1>
   <div class="row mb-2" id="actions">
     <div class="col-4">
       <button type="button" class="btn btn-secondary" (click)="openCreateFolderModal()">Create a Folder</button>
@@ -49,7 +49,7 @@
       </div>
       <div class="row mt-3">
         <div class="col-12">
-          Uploaded on {{this.datePipe.transform(currentFolder.dateCreated, 'dd/MM/yyyy')}}
+          Created on {{this.datePipe.transform(currentFolder.dateCreated, 'dd/MM/yyyy')}}
         </div>
       </div>
       <div class="row mt-2">
@@ -64,7 +64,7 @@
       </div>
       <div class="row mt-2">
         <div class="col-12">
-          <a type="button" class="btn" [download]="currentFolder.name" (click)="downloadFolder()">Download Folder</a>
+          <a type="button" class="btn btn-outline-info" [download]="currentFolder.name" download (click)="downloadFolder()">Download Folder</a>
         </div>
       </div>
     </div>

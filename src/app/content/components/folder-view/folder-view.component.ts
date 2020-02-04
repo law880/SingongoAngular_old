@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, SecurityContext} from '@angular/core';
 import {ContentService} from '../../services/content.service';
 import {Folder} from '../../models/folder';
 import {FolderContents} from '../../models/folder-contents';
@@ -10,9 +10,9 @@ import {FileUploadComponent} from './file-upload/file-upload.component';
 import {ActivatedRoute, ParamMap, Router, UrlSegment} from '@angular/router';
 import {File} from '../../models/file';
 import {HttpErrorResponse} from '@angular/common/http';
-import {FileSizePipe} from '../../file-size.pipe';
+import {FileSizePipe} from '../../../general/pipes/file-size.pipe';
 import {DatePipe} from '@angular/common';
-import {SafeUrl} from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-folder-view',
@@ -25,6 +25,8 @@ export class FolderViewComponent implements OnInit {
 
   public isHomeView = false;
 
+  public downloadUrl: SafeUrl = null;
+
   constructor(
     private contentService: ContentService,
     private fb: FormBuilder,
@@ -32,7 +34,8 @@ export class FolderViewComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private sizePipe: FileSizePipe,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -50,7 +53,9 @@ export class FolderViewComponent implements OnInit {
           this.route.paramMap.subscribe((params: ParamMap) => {
             if (params.has('id')) {
               const folderId = params.get('id');
-              this.contentService.update(folderId).subscribe(() => this.loading = false);
+              this.contentService.update(folderId).subscribe(() => {
+                    this.loading = false;
+              });
             }
           });
         }
@@ -103,7 +108,10 @@ export class FolderViewComponent implements OnInit {
   downloadFolder() {
     this.contentService.downloadCurrentFolder()
       .subscribe((url: SafeUrl) => {
-        window.open(url.toString());
+        const link = document.createElement('a');
+        link.href = this.sanitizer.sanitize(SecurityContext.URL, url);
+        link.download = this.currentFolder.name;
+        link.click();
       });
   }
 

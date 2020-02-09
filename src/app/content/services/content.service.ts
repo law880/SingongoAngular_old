@@ -3,7 +3,7 @@ import {Folder} from '../models/folder';
 import {File} from '../models/file';
 import {AuthService} from '../../auth/services/auth.service';
 import {UserInfoService} from '../../auth/services/user-info.service';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError, concatMap, map, tap} from 'rxjs/operators';
 import {MessageService} from '../../auth/services/message.service';
 import {Observable, of, Subscription, throwError} from 'rxjs';
@@ -201,5 +201,12 @@ export class ContentService {
     } else {
       return throwError(null);
     }
+  }
+
+  public search(keywords: string) {
+    const searchParams = new HttpParams();
+    searchParams.append('keywords', keywords);
+    return this.http.get(baseUrl + 'api/search', {params: searchParams})
+      .pipe(catchError(error => this.handleError('SEARCH', error)));
   }
 }

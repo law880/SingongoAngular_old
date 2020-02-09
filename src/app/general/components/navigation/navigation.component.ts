@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../../auth/services/auth.service';
 import {Router} from '@angular/router';
+import {FormBuilder, Validators} from '@angular/forms';
+import {ContentService} from '../../../content/services/content.service';
 
 @Component({
   selector: 'app-navigation',
@@ -9,9 +11,15 @@ import {Router} from '@angular/router';
 })
 export class NavigationComponent implements OnInit {
 
+  public searchForm = this.fb.group({
+    keywords: ['', Validators.required]
+  });
+
   constructor(
     private authService: AuthService,
-    private router: Router
+    private contentService: ContentService,
+    private router: Router,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit() {
@@ -28,4 +36,13 @@ export class NavigationComponent implements OnInit {
     }
   }
 
+  submitSearch() {
+    console.log(this.searchForm.value);
+    this.contentService.search(this.keywords.value)
+      .subscribe(data => {
+        console.log(data);
+      });
+  }
+
+  get keywords() { return this.searchForm.get('keywords'); }
 }

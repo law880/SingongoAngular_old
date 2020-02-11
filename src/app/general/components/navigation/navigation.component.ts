@@ -38,10 +38,7 @@ export class NavigationComponent implements OnInit {
 
   submitSearch() {
     console.log(this.searchForm.value);
-    this.contentService.search(this.keywords.value)
-      .subscribe(data => {
-        console.log(data);
-      });
+    this.router.navigate(['search'], {queryParams: {keywords: this.searchForm.get('keywords').value}});
   }
 
   get keywords() { return this.searchForm.get('keywords'); }

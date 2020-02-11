@@ -6,7 +6,8 @@ export class File {
     public dateCreated: Date,
     public dateModified: Date,
     public type: string,
-    public extension: string
+    public extension: string,
+    public parentId: string
   ) { }
 
   get fileId() { return this.id; }
@@ -22,6 +23,8 @@ export class File {
   get fileType() { return this.type; }
 
   get fileExtension() { return this.extension; }
+
+  get fileParentId() { return this.parentId; }
 
   get icon() {
     let iconName;

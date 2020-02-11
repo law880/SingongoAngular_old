@@ -113,7 +113,7 @@ export class ContentService {
             value = value as File;
             contentList.push(new File(value.id, value.fileName,
               value.size, value.dateCreated, value.dateModified,
-              value.type, value.extension));
+              value.type, value.extension, value.parentId));
           }
           });
 
@@ -204,9 +204,28 @@ export class ContentService {
   }
 
   public search(keywords: string) {
-    const searchParams = new HttpParams();
-    searchParams.append('keywords', keywords);
-    return this.http.get(baseUrl + 'api/search', {params: searchParams})
-      .pipe(catchError(error => this.handleError('SEARCH', error)));
+    console.log(keywords);
+    const searchParams = new HttpParams()
+      .set('keywords', keywords);
+    return this.http.get<FolderContents>(baseUrl + 'api/search', {params: searchParams})
+      .pipe(
+        map(data => {
+          const contentList: Array<File | Folder> = new Array<File|Folder>();
+          data.contentList.forEach((value: Folder | File) => {
+            if ((value as Folder).contents !== undefined) {
+              value = value as Folder;
+              contentList.push(new Folder(value.id, value.name,
+                value.contents, value.parentId, value.dateCreated, value.dateModified, value.size));
+            } else {
+              value = value as File;
+              contentList.push(new File(value.id, value.fileName,
+                value.size, value.dateCreated, value.dateModified,
+                value.type, value.extension, value.parentId));
+            }
+          });
+
+          return new FolderContents(contentList);
+        }),
+        catchError(error => this.handleError('SEARCH', error)));
   }
 }

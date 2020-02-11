@@ -34,6 +34,7 @@ import {VgControlsModule} from 'videogular2/compiled/src/controls/controls';
 import {VgOverlayPlayModule} from 'videogular2/compiled/src/overlay-play/overlay-play';
 import {VgBufferingModule} from 'videogular2/compiled/src/buffering/buffering';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { SearchViewComponent } from './content/components/search-view/search-view.component';
 
 // noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
@@ -52,7 +53,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     FileUploadComponent,
     FileViewComponent,
     FileSizePipe,
-    LoadDisplayComponent
+    LoadDisplayComponent,
+    SearchViewComponent
   ],
   imports: [
     NgbModule,

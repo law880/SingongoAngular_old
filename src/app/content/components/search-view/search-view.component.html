@@ -1,0 +1,43 @@
+<app-message [componentName]="compName"></app-message>
+<div *ngIf="!this.loading && this.searchResults else showLoad" class="container">
+  <h1>Search Results</h1>
+  <div class="row mb-2" id="actions">
+    <div class="col-4">
+      <button type="button" class="btn btn-secondary" (click)="this.location.back()">Back</button>
+    </div>
+    <div class="col-4">
+      <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" aria-haspopup="true" id="sortByButton" data-toggle="dropdown" aria-expanded="false" >
+          Sort by:
+        </button>
+        <div class="dropdown-menu" aria-labelledby="sortByButton">
+          <a class="dropdown-item" (click)="sortBy('name')">Name</a>
+          <a class="dropdown-item" (click)="sortBy('created')">Date created</a>
+          <a class="dropdown-item" (click)="sortBy('modified')">Date modified</a>
+          <a class="dropdown-item" (click)="sortBy('size')">Size</a>
+          <a class="dropdown-item" (click)="sortBy('type')">Type</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-8" id="content">
+      <div class="row">
+        <div class="col" *ngFor="let con of this.contents.contentList; index as i;" (click)="goTo(con)">
+          <div class="row">
+            <div class="col-12 text-center">
+              <img *ngIf="con.icon else showFolder" src="{{con.icon}}" width="100" class="img-thumbnail img-fluid" />
+              <ng-template #showFolder><img src="assets/img/folder.png" width="100" class="img-thumbnail" /></ng-template>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 text-center">
+              {{con.name}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #showLoad><mat-progress-spinner></mat-progress-spinner></ng-template>

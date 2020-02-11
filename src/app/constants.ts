@@ -11,3 +11,5 @@ export const FOLDER_CREATE_COMPONENT = 'FolderCreate';
 export const FILE_UPLOAD_COMPONENT = 'FileUpload';
 
 export const FILE_VIEW_COMPONENT = 'FileView';
+
+export const SEARCH_VIEW_COMPONENT = 'SearchView';

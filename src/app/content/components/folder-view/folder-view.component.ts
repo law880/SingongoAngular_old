@@ -13,6 +13,8 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {FileSizePipe} from '../../../general/pipes/file-size.pipe';
 import {DatePipe} from '@angular/common';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {DeleteViewComponent} from '../delete-view/delete-view.component';
+import {RenameViewComponent} from '../rename-view/rename-view.component';
 
 @Component({
   selector: 'app-folder-view',
@@ -115,4 +117,13 @@ export class FolderViewComponent implements OnInit {
       });
   }
 
+  openDeleteModal() {
+      const delModal = this.modalService.open(DeleteViewComponent);
+      delModal.componentInstance.deletion = this.currentFolder;
+  }
+
+  openRenameModal() {
+    const renameModal = this.modalService.open(RenameViewComponent);
+    renameModal.componentInstance.folder = this.currentFolder;
+  }
 }

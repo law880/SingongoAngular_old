@@ -12,7 +12,7 @@ import {LOGIN_FORM_COMPONENT} from '../../../constants';
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.css']
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
   loginForm = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
@@ -25,6 +25,12 @@ export class LoginFormComponent {
               private router: Router,
               private userInfoService: UserInfoService
   ) { }
+
+  ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['home']);
+    }
+  }
 
   onSubmit() {
     console.log(this.loginForm.value);

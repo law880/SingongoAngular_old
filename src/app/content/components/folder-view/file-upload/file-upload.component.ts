@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, Input} from '@angular/core';
 import {ContentService} from '../../../services/content.service';
 import {FormBuilder, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {FILE_UPLOAD_COMPONENT} from '../../../../constants';
+import {baseUrl, FILE_UPLOAD_COMPONENT} from '../../../../constants';
 
 @Component({
   selector: 'app-file-upload',
@@ -14,7 +14,7 @@ import {FILE_UPLOAD_COMPONENT} from '../../../../constants';
 export class FileUploadComponent {
   @Input() public folderId: string;
 
-  fileToUpload: File = null;
+  filesToUpload: Array<File> = [];
 
   public loading = false;
 
@@ -25,14 +25,16 @@ export class FileUploadComponent {
 
   onFileSelect(event) {
     if (event.target.files && event.target.files.length > 0) {
-      this.fileToUpload = event.target.files[0];
+      for (const file of event.target.files) {
+      this.filesToUpload.push(file);
+      }
     }
   }
 
 
   onSubmit() {
     this.loading = true;
-    this.contentService.uploadFile(this.fileToUpload, this.folderId)
+    this.contentService.uploadFile(this.filesToUpload, this.folderId)
       .subscribe(data => {
         alert('File uploaded successfully');
         this.loading = false;
@@ -40,7 +42,7 @@ export class FileUploadComponent {
       });
   }
 
-  get file() { return this.fileToUpload; }
+  get files() { return this.filesToUpload; }
 
   get compName() { return FILE_UPLOAD_COMPONENT; }
 

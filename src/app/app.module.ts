@@ -35,6 +35,9 @@ import {VgOverlayPlayModule} from 'videogular2/compiled/src/overlay-play/overlay
 import {VgBufferingModule} from 'videogular2/compiled/src/buffering/buffering';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SearchViewComponent } from './content/components/search-view/search-view.component';
+import {AngularFileUploaderModule} from 'angular-file-uploader';
+import { DeleteViewComponent } from './content/components/delete-view/delete-view.component';
+import { RenameViewComponent } from './content/components/rename-view/rename-view.component';
 
 // noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
@@ -54,7 +57,9 @@ import { SearchViewComponent } from './content/components/search-view/search-vie
     FileViewComponent,
     FileSizePipe,
     LoadDisplayComponent,
-    SearchViewComponent
+    SearchViewComponent,
+    DeleteViewComponent,
+    RenameViewComponent
   ],
   imports: [
     NgbModule,
@@ -71,7 +76,8 @@ import { SearchViewComponent } from './content/components/search-view/search-vie
     VgControlsModule,
     VgOverlayPlayModule,
     VgBufferingModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    AngularFileUploaderModule
   ],
   providers: [
     AuthGuardService,
@@ -86,6 +92,6 @@ import { SearchViewComponent } from './content/components/search-view/search-vie
     DatePipe,
   FileSizePipe],
   bootstrap: [AppComponent],
-  entryComponents: [FolderCreateComponent, FileUploadComponent]
+  entryComponents: [FolderCreateComponent, FileUploadComponent, DeleteViewComponent, RenameViewComponent]
 })
 export class AppModule { }

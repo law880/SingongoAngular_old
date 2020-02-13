@@ -1,22 +1,24 @@
 <div class="modal-header">
-  <h2 class="modal-title" id="uploadFileTitle">Upload Files</h2>
+  <h2 class="modal-title" id="renameTitle">Rename Folder</h2>
   <button type="button" class="close" (click)="activeModal.dismiss('Cross click')" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div *ngIf="!this.loading else showLoad">
+  <form [formGroup]="renameForm" (ngSubmit)="onSubmit()">
     <div class="modal-body">
-      <app-message [componentName]="compName"></app-message>
       <div class="form-group">
-        <label for="files">Upload one or more files:</label>
-        <input type="file" multiple name="files" placeholder="Choose a File" class="form-control" id="files"
-               (change)="onFileSelect($event)" required />
+        <label for="fName">Folder name:</label>
+        <input type="text" name="fName" placeholder="Enter a new name for this folder"
+               class="form-control" id="fName" formControlName="newName" required
+        />
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss('Cross click')">Close</button>
-      <button type="submit" class="btn btn-primary" (click)="onSubmit()">Upload</button>
+      <button type="submit" class="btn btn-primary">Rename</button>
     </div>
+  </form>
 </div>
 <ng-template #showLoad>
   <div class="modal-body">

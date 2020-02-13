@@ -83,9 +83,11 @@ export class ContentService {
       .subscribe(() => this.update().subscribe()));
   }
 
-  public uploadFile(fileToUpload, folderId: string): Observable<Subscription> {
+  public uploadFile(filesToUpload: Array<any>, folderId: string): Observable<Subscription> {
     const formData = new FormData();
-    formData.append('file', fileToUpload);
+    for (const file of filesToUpload) {
+      formData.append('file', file);
+    }
     console.log(JSON.stringify(formData));
     return of(this.http.post(baseUrl + 'api/' + folderId + '/upload', formData)
       .pipe(
@@ -210,6 +212,7 @@ export class ContentService {
     return this.http.get<FolderContents>(baseUrl + 'api/search', {params: searchParams})
       .pipe(
         map(data => {
+          console.log(data);
           const contentList: Array<File | Folder> = new Array<File|Folder>();
           data.contentList.forEach((value: Folder | File) => {
             if ((value as Folder).contents !== undefined) {
@@ -227,5 +230,19 @@ export class ContentService {
           return new FolderContents(contentList);
         }),
         catchError(error => this.handleError('SEARCH', error)));
+  }
+
+  public deleteFolder(deletion: Folder) {
+    return this.http.delete(baseUrl + 'api/' + deletion.id);
+  }
+
+  public deleteFile(deletion: File) {
+    return this.http.delete(baseUrl + 'api/' + deletion.parentId + '/' + deletion.id);
+  }
+
+  public renameFolder(rename: Folder, renameName: string) {
+    const params = new HttpParams()
+      .set('newName', renameName)
+    return this.http.patch(baseUrl + 'api/folder/' + rename.id, params);
   }
 }

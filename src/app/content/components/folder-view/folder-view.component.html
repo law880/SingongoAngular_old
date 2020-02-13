@@ -1,14 +1,20 @@
 <app-message [componentName]="compName"></app-message>
 <div *ngIf="!this.loading && this.currentFolder && this.contents else showLoad" class="container">
-  <h1>{{currentFolder.name === 'home' ? 'Home' : currentFolder.name}}</h1>
+  <h1>{{currentFolder.name}}</h1>
   <div class="row mb-2" id="actions">
-    <div class="col-4">
+    <div class="col">
       <button type="button" class="btn btn-secondary" (click)="openCreateFolderModal()">Create a Folder</button>
     </div>
-    <div class="col-4">
-      <button type="button" class="btn btn-secondary" (click)="openFileUploadModal()">Upload a File</button>
+    <div class="col">
+      <button type="button" class="btn btn-secondary" (click)="openFileUploadModal()">Upload Files</button>
     </div>
-    <div class="col-4">
+    <div class="col" *ngIf="currentFolder.name !== 'home'">
+      <button type="button" class="btn btn-secondary" (click)="openRenameModal()">Rename Folder</button>
+    </div>
+    <div class="col" *ngIf="currentFolder.name !== 'home'">
+      <button type="button" class="btn btn-danger" (click)="openDeleteModal()">Delete Folder</button>
+    </div>
+    <div class="col">
       <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" aria-haspopup="true" id="sortByButton" data-toggle="dropdown" aria-expanded="false" >
           Sort by:

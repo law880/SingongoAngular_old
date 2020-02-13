@@ -28,13 +28,19 @@ export class SearchViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    console.log('init search');
+    this.loading = true;
+    this.route.queryParamMap.subscribe((params: ParamMap) => {
       if (params.has('keywords')) {
         this.keywords = params.get('keywords');
         this.contentService.search(this.keywords)
           .subscribe(results => {
               this.searchResults = results;
+              console.log(this.searchResults);
+              this.loading = false;
           });
+      } else {
+        console.log('no params');
       }
     });
   }

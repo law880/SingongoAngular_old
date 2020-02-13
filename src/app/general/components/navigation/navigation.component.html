@@ -7,9 +7,9 @@
       </ul>
     </div>
     <span class="navbar-text"><button type="button" class="btn btn-outline-secondary" (click)="doAuthAction()">{{this.authenticated ? 'Logout' : 'Login'}}</button></span>
-    <form *ngIf="authenticated" class="form-inline" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+    <form *ngIf="authenticated" class="form-inline ml-4" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
       <input class="form-control" type="search" placeholder="Search for resources" aria-label="Search for resources" formControlName="keywords">
-      <button class="btn btn-outline-success" type="submit">Search</button>
+      <button class="btn btn-outline-success ml-2" type="submit">Search</button>
     </form>
   </div>
 </nav>

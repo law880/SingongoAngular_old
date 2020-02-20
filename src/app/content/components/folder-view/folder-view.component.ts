@@ -124,6 +124,6 @@ export class FolderViewComponent implements OnInit {
 
   openRenameModal() {
     const renameModal = this.modalService.open(RenameViewComponent);
-    renameModal.componentInstance.folder = this.currentFolder;
+    renameModal.componentInstance.renameItem = this.currentFolder;
   }
 }

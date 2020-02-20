@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {UserInformation} from '../models/user-information';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {catchError} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {AuthService} from './auth.service';
 import {Observable, of, throwError} from 'rxjs';
 import {baseUrl} from '../../constants';
@@ -13,7 +13,7 @@ import {PASSWORD_CHANGE_COMPONENT} from '../../constants';
   providedIn: 'root'
 })
 export class UserInfoService {
-  public user: UserInformation = new UserInformation();
+  public currentUser: UserInformation = new UserInformation();
 
   httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -26,8 +26,8 @@ export class UserInfoService {
 
   setCredentials(username: string, password: string) {
     console.log('in setting ');
-    this.user.setUsername(username);
-    this.user.setPassword(password);
+    this.currentUser.setUsername(username);
+    this.currentUser.setPassword(password);
   }
 
   fetchInfo(): Observable<any> {
@@ -36,7 +36,14 @@ export class UserInfoService {
     if (!token) {
       return;
     }
-    return this.http.get<any>(baseUrl + 'current', this.httpOptions);
+    return this.http.get<UserInformation>(baseUrl + 'user', this.httpOptions)
+      .pipe(map(data => {
+        data.setPassword(this.currentUser.userPassword);
+        return data;
+      }),
+        tap(user => {
+          this.currentUser = user;
+        }));
   }
 
   update(updatedUser: UserInformation) {
@@ -48,28 +55,28 @@ export class UserInfoService {
     // check what's changed
     let body = {};
     let updated = false;
-    if (this.user.userUsername !== updatedUser.userUsername) {
+    if (this.currentUser.userUsername !== updatedUser.userUsername) {
       body = {
         ...body,
         username: updatedUser.userUsername
       };
       updated = true;
     }
-    if (this.user.userName !== updatedUser.userName) {
+    if (this.currentUser.userName !== updatedUser.userName) {
       body = {
         ...body,
         name: updatedUser.userName
       };
       updated = true;
     }
-    if (this.user.userPassword !== updatedUser.userPassword) {
+    if (this.currentUser.userPassword !== updatedUser.userPassword) {
       body = {
         ...body,
         password: updatedUser.userPassword
       };
       updated = true;
     }
-    if (this.user.userAuthLevel !== updatedUser.userAuthLevel) {
+    if (this.currentUser.userAuthLevel !== updatedUser.userAuthLevel) {
       body = {
         ...body,
         authLevel: updatedUser.userAuthLevel === true ? UserInformation.ADMIN_ROLE : UserInformation.USER_ROLE
@@ -77,7 +84,7 @@ export class UserInfoService {
       updated = true;
     }
     if (updated === true) {
-      return this.http.patch('http://localhost:8080/user/' + this.user.userUsername, body, this.httpOptions);
+      return this.http.patch(baseUrl + 'user/' + this.currentUser.userUsername, body, this.httpOptions);
     } else {
       return of(null);
     }
@@ -85,11 +92,11 @@ export class UserInfoService {
 
   changePassword(currPassword: string, newPassword: string, newPassConfirm: string) {
     this.messageService.delete(PASSWORD_CHANGE_COMPONENT);
-    if (currPassword !== this.user.userPassword) {
+    if (currPassword !== this.currentUser.userPassword) {
       return of(null);
     }
-    this.user.setPassword(newPassword);
-    return this.http.patch(baseUrl + 'user/' + this.user.userUsername, {
+    this.currentUser.setPassword(newPassword);
+    return this.http.patch(baseUrl + 'user/' + this.currentUser.userUsername, {
       password: newPassword,
       passwordConfirm: newPassConfirm
     }, this.httpOptions).pipe(
@@ -100,5 +107,33 @@ export class UserInfoService {
     );
   }
 
-  get correctPassword() { return this.user.userPassword; }
+  getAllUsers(): Observable<Array<UserInformation>> {
+    if (this.currentUser && this.currentUser.userAuthLevel === UserInformation.ADMIN_ROLE) {
+      return this.http.get<Array<UserInformation>>(baseUrl + 'users');
+    } else {
+      return throwError(new HttpErrorResponse( {
+        error: {
+          message: 'User is not authorized to get a list of all users',
+          fix: 'Sign in to an ADMINISTRATOR account to perform this request'
+        },
+        status: 401,
+        statusText: 'Unauthorized'}));
+    }
+  }
+
+  getSpecificUser(username: string): Observable<UserInformation> {
+  if (this.currentUser && this.currentUser.userAuthLevel === UserInformation.ADMIN_ROLE) {
+  return this.http.get<UserInformation>(baseUrl + 'user/' + username);
+} else {
+  return throwError(new HttpErrorResponse( {
+    error: {
+      message: 'User is not authorized to get a list of all users',
+      fix: 'Sign in to an ADMINISTRATOR account to perform this request'
+    },
+    status: 401,
+    statusText: 'Unauthorized'}));
+}
+}
+
+  get correctPassword() { return this.currentUser.userPassword; }
 }

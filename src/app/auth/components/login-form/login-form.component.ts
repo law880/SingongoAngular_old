@@ -40,7 +40,7 @@ export class LoginFormComponent implements OnInit {
          localStorage.setItem('token', token.token);
          localStorage.setItem('refreshToken', token.refreshToken);
          this.userInfoService.setCredentials(loginInfo.username, loginInfo.password);
-         console.log('username in login ' + this.userInfoService.user.userUsername);
+         console.log('username in login ' + this.userInfoService.currentUser.userUsername);
          this.router.navigate(['home']);
        });
   }

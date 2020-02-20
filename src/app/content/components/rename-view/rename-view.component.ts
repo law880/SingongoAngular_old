@@ -44,19 +44,15 @@ export class RenameViewComponent implements OnInit {
       if (this.renameItem instanceof Folder) {
         this.contentService.renameFolder(this.renameItem, this.fName.value)
           .subscribe(() => {
-            alert('Folder successfully renamed to ' + this.fName.value);
             this.contentService.update()
-              .subscribe(() => {
-                this.loading = false;
-                this.activeModal.close('success');
-              });
-          }, error => {
-            console.log(error);
-            this.loading = false;
-            alert('Sorry, the rename failed. Please try again later.');
-            this.activeModal.close('failure');
-          });
+              .subscribe(() => this.handleSuccess(), error => this.handleError(error));
+          }, error => this.handleError(error));
       } else {
+        this.contentService.renameFile(this.renameItem, this.fName.value)
+          .subscribe(() => {
+            this.contentService.update()
+              .subscribe(() => this.handleSuccess(), error => this.handleError(error));
+          }, error => this.handleError(error));
       }
     }
   }

@@ -245,4 +245,10 @@ export class ContentService {
       .set('newName', renameName)
     return this.http.patch(baseUrl + 'api/folder/' + rename.id, params);
   }
+
+  public renameFile(rename: File, renameName: string) {
+    const params = new HttpParams()
+      .set('newName', renameName);
+    return this.http.patch(baseUrl + 'api/file/' + rename.id, params);
+  }
 }

@@ -13,9 +13,9 @@ const jwtHelperService = new JwtHelperService();
 
 @Injectable()
 export class AuthService {
-
   constructor(public messageService: MessageService,
               private http: HttpClient) { }
+
   loginUrl = baseUrl + 'authenticate';
 
   httpOptions = {

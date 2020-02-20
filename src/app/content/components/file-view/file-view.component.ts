@@ -3,8 +3,10 @@ import {ContentService} from '../../services/content.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {File} from '../../models/file';
 import {DatePipe, Location} from '@angular/common';
-import {DomSanitizer} from "@angular/platform-browser";
-import {FileSizePipe} from "../../../general/pipes/file-size.pipe";
+import {FileSizePipe} from '../../../general/pipes/file-size.pipe';
+import {DeleteViewComponent} from '../delete-view/delete-view.component';
+import {RenameViewComponent} from '../rename-view/rename-view.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-file-view',
@@ -17,13 +19,15 @@ export class FileViewComponent implements OnInit {
   public currentFile: File = null;
 
   public url: string = null;
+
   constructor(
     private contentService: ContentService,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
     private datePipe: DatePipe,
-    private sizePipe: FileSizePipe
+    private sizePipe: FileSizePipe,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit() {
@@ -87,5 +91,18 @@ export class FileViewComponent implements OnInit {
     alert('An unknown error occurred. Please try again later.\nReturning to the previous page');
     this.location.back();
     this.loading = false;
+  }
+
+  openDeleteModal() {
+    const delModal = this.modalService.open(DeleteViewComponent);
+    delModal.componentInstance.deletion = this.currentFile;
+  }
+
+  openRenameModal() {
+    const renameModal = this.modalService.open(RenameViewComponent);
+    renameModal.componentInstance.renameItem = this.currentFile;
+    renameModal.result.then(() => {
+      this.ngOnInit();
+    });
   }
 }

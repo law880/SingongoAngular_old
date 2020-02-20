@@ -8,8 +8,8 @@
   <form [formGroup]="renameForm" (ngSubmit)="onSubmit()">
     <div class="modal-body">
       <div class="form-group">
-        <label for="fName">Folder name:</label>
-        <input type="text" name="fName" placeholder="Enter a new name for this folder"
+        <label for="fName">New name:</label>
+        <input type="text" name="fName" placeholder="Enter a new name for this {{type}}"
                class="form-control" id="fName" formControlName="newName" required
         />
       </div>

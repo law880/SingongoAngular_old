@@ -107,7 +107,7 @@ export class UserInfoService {
     );
   }
 
-  getAllUsers(): Observable<Array<UserInformation>> {
+  fetchAllUsers(): Observable<Array<UserInformation>> {
     if (this.currentUser && this.currentUser.userAuthLevel === UserInformation.ADMIN_ROLE) {
       return this.http.get<Array<UserInformation>>(baseUrl + 'users');
     } else {
@@ -136,4 +136,20 @@ export class UserInfoService {
 }
 
   get correctPassword() { return this.currentUser.userPassword; }
+
+  get authLevel() { return this.currentUser.userAuthLevel; }
+
+  deleteUser(user: UserInformation) {
+    return this.http.delete(baseUrl + 'user/' + user.userUsername);
+  }
+
+  resetUserPassword(user: UserInformation) {
+
+  }
+
+  forgotPassword(email: string) {
+    return this.http.post(baseUrl, {
+      emailIn: email
+    });
+  }
 }

@@ -30,10 +30,10 @@ export class ProfileViewComponent implements OnInit {
       this.user.setUsername(result.username);
       this.user.setName(result.name);
       if (result.authLevel === UserInformation.ADMIN_ROLE) {
-        this.user.setAuthLevel(false);
+        this.user.setAuthLevel(UserInformation.ADMIN_ROLE);
         this.authLevel = 'Administrator';
       } else {
-        this.user.setAuthLevel(true);
+        this.user.setAuthLevel(UserInformation.USER_ROLE);
         this.authLevel = 'Singer';
       }
       this.loading = false;
@@ -45,7 +45,7 @@ export class ProfileViewComponent implements OnInit {
     modalRef.componentInstance.passPassword.subscribe();
     modalRef.result.then((newPassword: string) => {
       if (newPassword) {
-        this.userInfoService.setCredentials(this.user.userUsername, newPassword)
+        this.userInfoService.setCredentials(this.user.userUsername, newPassword);
       }
     });
   }

@@ -1,5 +1,5 @@
 <div *ngIf="!this.loading else showLoad" class="container">
-  <div class="row" id="actions">
+  <div class="row" id="actions" *ngIf="userInfoService.authLevel === true">
     <div class="col">
       <button type="button" class="btn btn-outline-info" (click)="openRenameModal()">Rename File</button>
     </div>

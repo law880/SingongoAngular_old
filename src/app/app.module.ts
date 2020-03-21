@@ -38,6 +38,8 @@ import { SearchViewComponent } from './content/components/search-view/search-vie
 import {AngularFileUploaderModule} from 'angular-file-uploader';
 import { DeleteViewComponent } from './content/components/delete-view/delete-view.component';
 import { RenameViewComponent } from './content/components/rename-view/rename-view.component';
+import { UserViewComponent } from './auth/components/user-view/user-view.component';
+import { ForgotPasswordViewComponent } from './auth/components/forgot-password-view/forgot-password-view.component';
 
 // noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
@@ -59,7 +61,9 @@ import { RenameViewComponent } from './content/components/rename-view/rename-vie
     LoadDisplayComponent,
     SearchViewComponent,
     DeleteViewComponent,
-    RenameViewComponent
+    RenameViewComponent,
+    UserViewComponent,
+    ForgotPasswordViewComponent
   ],
   imports: [
     NgbModule,

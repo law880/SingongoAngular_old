@@ -15,6 +15,7 @@ import {DatePipe} from '@angular/common';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {DeleteViewComponent} from '../delete-view/delete-view.component';
 import {RenameViewComponent} from '../rename-view/rename-view.component';
+import {UserInfoService} from '../../../auth/services/user-info.service';
 
 @Component({
   selector: 'app-folder-view',
@@ -37,7 +38,8 @@ export class FolderViewComponent implements OnInit {
     private router: Router,
     private sizePipe: FileSizePipe,
     private datePipe: DatePipe,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private userInfoService: UserInfoService
   ) { }
 
   ngOnInit() {

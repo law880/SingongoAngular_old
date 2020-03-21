@@ -7,6 +7,7 @@ import {FileSizePipe} from '../../../general/pipes/file-size.pipe';
 import {DeleteViewComponent} from '../delete-view/delete-view.component';
 import {RenameViewComponent} from '../rename-view/rename-view.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {UserInfoService} from '../../../auth/services/user-info.service';
 
 @Component({
   selector: 'app-file-view',
@@ -27,7 +28,8 @@ export class FileViewComponent implements OnInit {
     private location: Location,
     private datePipe: DatePipe,
     private sizePipe: FileSizePipe,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private userInfoService: UserInfoService
   ) { }
 
   ngOnInit() {

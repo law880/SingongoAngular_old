@@ -2,17 +2,19 @@
 <div *ngIf="!this.loading && this.currentFolder && this.contents else showLoad" class="container">
   <h1>{{currentFolder.name}}</h1>
   <div class="row mb-2" id="actions">
-    <div class="col">
-      <button type="button" class="btn btn-secondary" (click)="openCreateFolderModal()">Create a Folder</button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-secondary" (click)="openFileUploadModal()">Upload Files</button>
-    </div>
-    <div class="col" *ngIf="currentFolder.name !== 'home'">
-      <button type="button" class="btn btn-secondary" (click)="openRenameModal()">Rename Folder</button>
-    </div>
-    <div class="col" *ngIf="currentFolder.name !== 'home'">
-      <button type="button" class="btn btn-danger" (click)="openDeleteModal()">Delete Folder</button>
+    <div *ngIf="userInfoService.authLevel === true">
+      <div class="col">
+        <button type="button" class="btn btn-secondary" (click)="openCreateFolderModal()">Create a Folder</button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-secondary" (click)="openFileUploadModal()">Upload Files</button>
+      </div>
+      <div class="col" *ngIf="currentFolder.name !== 'home'">
+        <button type="button" class="btn btn-secondary" (click)="openRenameModal()">Rename Folder</button>
+      </div>
+      <div class="col" *ngIf="currentFolder.name !== 'home'">
+        <button type="button" class="btn btn-danger" (click)="openDeleteModal()">Delete Folder</button>
+      </div>
     </div>
     <div class="col">
       <div class="dropdown">
@@ -36,7 +38,7 @@
           <div class="row">
             <div class="col-12 text-center">
               <img *ngIf="con.icon else showFolder" src="{{con.icon}}" width="100" class="img-thumbnail img-fluid" />
-              <ng-template #showFolder><img src="assets/img/folder.png" width="100" class="img-thumbnail" /></ng-template>
+              <ng-template #showFolder><img src="assets/img/folder.png" width="100" class="img-thumbnail img-fluid" /></ng-template>
             </div>
           </div>
           <div class="row">

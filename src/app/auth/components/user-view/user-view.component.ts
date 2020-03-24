@@ -24,7 +24,13 @@ export class UserViewComponent implements OnInit {
   }
 
   deleteUser(user: UserInformation) {
-    this.userInfoService.
+    this.userInfoService.deleteUser(user)
+      .subscribe(() => {
+        alert('User ' + user.userUsername + ' deleted successfully');
+        this.ngOnInit();
+      }, (error) => {
+        alert('An error occurred. Please try again later')
+      });
   }
 
 }

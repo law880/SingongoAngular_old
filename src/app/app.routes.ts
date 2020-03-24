@@ -7,6 +7,8 @@ import {ProfileViewComponent} from './content/profile-view/profile-view.componen
 import {FolderViewComponent} from './content/components/folder-view/folder-view.component';
 import {FileViewComponent} from './content/components/file-view/file-view.component';
 import {SearchViewComponent} from './content/components/search-view/search-view.component';
+import {ForgotPasswordViewComponent} from './auth/components/forgot-password-view/forgot-password-view.component';
+import {ResetPasswordViewComponent} from './auth/components/reset-password-view/reset-password-view.component';
 
 export const ROUTES: Routes = [
   {
@@ -41,6 +43,14 @@ export const ROUTES: Routes = [
     path: 'profile',
     component: ProfileViewComponent,
     canActivate: [AuthGuardService]
+  },
+  {
+    path: 'forgot',
+    component: ForgotPasswordViewComponent
+  },
+  {
+    path: 'reset/:resetToken',
+    component: ResetPasswordViewComponent
   },
   {
     path: '**',

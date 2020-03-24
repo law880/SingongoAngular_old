@@ -9,7 +9,7 @@ import {MessageService} from './message.service';
 import {baseUrl} from '../../constants';
 import {LOGIN_FORM_COMPONENT} from '../../constants';
 
-const jwtHelperService = new JwtHelperService();
+export const jwtHelperService = new JwtHelperService();
 
 @Injectable()
 export class AuthService {
@@ -51,6 +51,16 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
   }
+
+  public validateAndStoreToken(token: Token): boolean {
+    if (!jwtHelperService.isTokenExpired(token.token) &&
+      !jwtHelperService.isTokenExpired(token.refreshToken)) {
+      localStorage.setItem('token', token.token);
+      localStorage.setItem('refreshToken', token.refreshToken);
+      return true;
+    }
+    return false;
+}
 
   public refreshToken() {
     return this.http.post<any>(baseUrl + 'refresh', {

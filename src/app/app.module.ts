@@ -40,6 +40,7 @@ import { DeleteViewComponent } from './content/components/delete-view/delete-vie
 import { RenameViewComponent } from './content/components/rename-view/rename-view.component';
 import { UserViewComponent } from './auth/components/user-view/user-view.component';
 import { ForgotPasswordViewComponent } from './auth/components/forgot-password-view/forgot-password-view.component';
+import { ResetPasswordViewComponent } from './auth/components/reset-password-view/reset-password-view.component';
 
 // noinspection AngularInvalidImportedOrDeclaredSymbol
 @NgModule({
@@ -63,7 +64,8 @@ import { ForgotPasswordViewComponent } from './auth/components/forgot-password-v
     DeleteViewComponent,
     RenameViewComponent,
     UserViewComponent,
-    ForgotPasswordViewComponent
+    ForgotPasswordViewComponent,
+    ResetPasswordViewComponent
   ],
   imports: [
     NgbModule,

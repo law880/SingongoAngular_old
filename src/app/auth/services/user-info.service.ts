@@ -8,6 +8,7 @@ import {baseUrl} from '../../constants';
 import {Router} from '@angular/router';
 import {MessageService} from './message.service';
 import {PASSWORD_CHANGE_COMPONENT} from '../../constants';
+import {Token} from '../models/token';
 
 @Injectable({
   providedIn: 'root'
@@ -143,13 +144,23 @@ export class UserInfoService {
     return this.http.delete(baseUrl + 'user/' + user.userUsername);
   }
 
-  resetUserPassword(user: UserInformation) {
-
+  resetUserPassword(resetToken: string, password: string, passwordConfirm: string): Observable<Token> {
+    if (password === passwordConfirm) {
+      return this.http.post<Token>(baseUrl + 'reset/' + resetToken, {
+        password,
+        passwordConfirm
+      });
+    } else {
+      alert('Passwords do not match. Please try again');
+      return throwError({
+        message: 'Passwords do not match'
+      });
+    }
   }
 
   forgotPassword(email: string) {
-    return this.http.post(baseUrl, {
-      emailIn: email
+    return this.http.post(baseUrl + 'forgot', {
+      email
     });
   }
 }
